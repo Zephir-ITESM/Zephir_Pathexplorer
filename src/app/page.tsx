@@ -1,56 +1,31 @@
-import { Link } from "@heroui/link";
-import { Snippet } from "@heroui/snippet";
-import { Code } from "@heroui/code";
-import { button as buttonStyles } from "@heroui/theme";
+'use client';
 
-import { siteConfig } from "@/src/config/site";
-import { title, subtitle } from "@/src/components/primitives";
-import { GithubIcon } from "@/src/components/icons";
+import Image from 'next/image';
+import { Suspense } from 'react';
+import LoginClient from './loginClient';
 
-export default function Home() {
+export default function LoginPage() {
   return (
-    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-      <div className="inline-block max-w-xl text-center justify-center">
-        <span className={title()}>Make&nbsp;</span>
-        <span className={title({ color: "violet" })}>beautiful&nbsp;</span>
-        <br />
-        <span className={title()}>
-          websites regardless of your design experience.
-        </span>
-        <div className={subtitle({ class: "mt-4" })}>
-          Beautiful, fast and modern React UI library.
+    <div className="flex h-screen">
+      <div className="w-full md:w-1/2 flex flex-col items-center justify-center px-8 md:px-16 lg:px-24">
+        <div className="w-full max-w-md">
+          <div className="flex justify-center mb-12">
+            <Image src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/isotype-LeB08fSQGXtfo1SZlZNz14X5gfqaC8.png" alt="Accenture" width={412} height={122} className="h-12 w-auto" />
+          </div>
+
+          <h1 className="text-3xl font-bold text-center text-accenture-purple mb-2">Bienvenido de Nuevo</h1>
+          <p className="text-center text-gray-600 mb-10">Porfavor Ingresa tus Datos</p>
+
+          <Suspense fallback={<div>Cargando formulario...</div>}>
+            <LoginClient />
+          </Suspense>
         </div>
       </div>
 
-      <div className="flex gap-3">
-        <Link
-          isExternal
-          className={buttonStyles({
-            color: "primary",
-            radius: "full",
-            variant: "shadow",
-          })}
-          href={siteConfig.links.docs}
-        >
-          Documentation
-        </Link>
-        <Link
-          isExternal
-          className={buttonStyles({ variant: "bordered", radius: "full" })}
-          href={siteConfig.links.github}
-        >
-          <GithubIcon size={20} />
-          GitHub
-        </Link>
+      <div className="hidden md:block md:w-1/2 relative">
+        <div className="absolute inset-0 bg-gradient-to-l from-black/70 to-black/40 z-10"></div>
+        <Image src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/accenture-bg-vTIDqKvXJRJZWNbQI53x86YqsvhyrS.png" alt="Accenture Building" fill className="object-cover" priority />
       </div>
-
-      <div className="mt-8">
-        <Snippet hideCopyButton hideSymbol variant="bordered">
-          <span>
-            Get started by editing <Code color="primary">app/page.tsx</Code>
-          </span>
-        </Snippet>
-      </div>
-    </section>
+    </div>
   );
 }
