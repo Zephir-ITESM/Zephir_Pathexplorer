@@ -1,0 +1,456 @@
+"use client"
+
+import type React from "react"
+import { useAuth } from "@/auth/useAuth"
+import { useState, useEffect } from "react"
+import { useParams, useRouter } from "next/navigation"
+import { IntegrantesTab, InvitacionesTab, AplicantesTab, SugerenciasTab} from "./components/index"
+import { CustomButton } from "@/components/ui/button"
+import { CustomInput } from "@/components/ui/input"
+import { CustomTabMenu, type TabItem } from "@/components/ui/tab-menu"
+import { PageHeader } from "@/components/ui/header"
+import { CustomSearchbar } from "@/components/ui/searchbar"
+import DatePicker from "react-datepicker"
+
+// Define the project interface
+interface Project {
+  id: string
+  name: string
+  company: string
+  description: string
+  startDate: string | Date
+  endDate: string | Date
+  teamMembers: {
+    role: string
+    count: number
+  }[]
+}
+
+export default function ProjectDetailsPage() {
+  const params = useParams()
+  const router = useRouter()
+  const { role, isLoading } = useAuth()
+  const [activeTab, setActiveTab] = useState("detalles")
+  const [isSaving, setIsSaving] = useState(false)
+  const [isNewlyCreated, setIsNewlyCreated] = useState(false)
+  const [project, setProject] = useState<Project | null>(null)
+  const [searchTerm, setSearchTerm] = useState("")
+
+  // Define tabs for the project details
+  const tabs: TabItem[] = [
+    { id: "detalles", label: "Detalles", icon: "icon-pencil" },
+    { id: "Integrantes", label: "Integrantes", icon: "icon-team" },
+    { id: "Invitaciones", label: "Invitaciones", icon: "icon-sms-star" },
+    { id: "Aplicantes", label: "Aplicantes", icon: "icon-clipboard" },
+    { id: "Sugerencias", label: "Sugerencias", icon: "icon-medal" },
+  ]
+
+  useEffect(() => {
+    const projectId = params.proyectoID as string
+
+    // Fetch project data
+    fetchProjectData(projectId)
+  }, [params.proyectoID])
+
+  // Convert string date to Date object
+  const parseDate = (dateString: string): Date => {
+    if (!dateString) return new Date()
+    return new Date(dateString)
+  }
+
+  // Format Date object to string (YYYY-MM-DD)
+  const formatDate = (date: Date): string => {
+    return date.toISOString().split("T")[0]
+  }
+
+  // Mock function to fetch project data
+  const fetchProjectData = async (projectId: string) => {
+    try {
+      // In a real implementation, this would be an API call
+      // For now, we'll check if this is a newly created project based on ID format
+      const isNewProject = projectId.startsWith("proj-")
+
+      if (isNewProject) {
+        setIsNewlyCreated(true)
+
+        // For a new project, initialize with empty data but keep the ID
+        setProject({
+          id: projectId,
+          name: "",
+          company: "",
+          description: "",
+          startDate: new Date(),
+          endDate: new Date(new Date().setMonth(new Date().getMonth() + 3)), // Default to 3 months from now
+          teamMembers: [
+            { role: "Frontend Developer", count: 4 },
+            { role: "Backend Developer", count: 4 },
+            { role: "DevOps", count: 1 },
+          ],
+        })
+      } else {
+        // For existing projects, load the data
+        // In a real implementation, this would be an API call
+        // Mock data for now
+        setProject({
+          id: projectId,
+          name: "Path Explorer",
+          company: "Accenture",
+          description:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus.",
+          startDate: parseDate("2025-03-15"),
+          endDate: parseDate("2025-06-15"),
+          teamMembers: [
+            { role: "Frontend Developer", count: 4 },
+            { role: "Backend Developer", count: 4 },
+            { role: "DevOps", count: 1 },
+          ],
+        })
+      }
+    } catch (error) {
+      console.error("Error fetching project data:", error)
+      // Handle error - could show an error message or redirect
+    }
+  }
+
+  // Handle input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    if (!project) return
+
+    setProject((prev) => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        [name]: value,
+      }
+    })
+  }
+
+  // Handle date changes
+  const handleDateChange = (name: string, date: Date | null) => {
+    if (!project || !date) return
+
+    setProject((prev) => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        [name]: date,
+      }
+    })
+  }
+
+  // Handle team member count changes
+  const handleTeamCountChange = (index: number, increment: boolean) => {
+    if (!project) return
+
+    setProject((prev) => {
+      if (!prev) return prev
+
+      const newTeamMembers = [...prev.teamMembers]
+      if (increment) {
+        newTeamMembers[index].count += 1
+      } else if (newTeamMembers[index].count > 0) {
+        newTeamMembers[index].count -= 1
+      }
+      return {
+        ...prev,
+        teamMembers: newTeamMembers,
+      }
+    })
+  }
+
+  // Calculate total team members
+  const totalTeamMembers = project?.teamMembers.reduce((sum, member) => sum + member.count, 0) || 0
+
+  // Handle save button click
+  const handleSave = async () => {
+    if (!project) return
+
+    setIsSaving(true)
+    try {
+      // Convert Date objects to strings for API submission
+      const projectToSave = {
+        ...project,
+        startDate: project.startDate instanceof Date ? formatDate(project.startDate) : project.startDate,
+        endDate: project.endDate instanceof Date ? formatDate(project.endDate) : project.endDate,
+      }
+
+      // In a real implementation, this would be an API call to save/update the project
+      console.log("Saving project:", projectToSave)
+
+      // Simulate API call with a delay
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+
+      // After successful save, redirect back to projects page
+      router.push(`/${params.employeeId}/${params.UserType}/proyectos`)
+    } catch (error) {
+      console.error("Error saving project:", error)
+      // Handle error (could add toast notification here)
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  // Handle cancel button click
+  const handleCancel = () => {
+    router.push(`/${params.employeeId}/${params.UserType}/proyectos`)
+  }
+
+  // Handle tab change
+  const handleTabChange = (tabId: string) => {
+    setActiveTab(tabId)
+    setSearchTerm("") // Reset search term when changing tabs
+  }
+
+  // Get tab-specific header elements
+  const getTabSpecificElements = () => {
+    switch (activeTab) {
+      case "Integrantes":
+        return {
+          leftContent: (
+            <CustomButton
+              variant="purple"
+              size="sm"
+              iconName="icon-users"
+              action={{ type: "function", handler: () => {} }}
+            >
+              Integrantes
+            </CustomButton>
+          ),
+          rightContent: (
+            <div className="w-[300px]">
+              <CustomSearchbar placeholder="Buscar empleados" onSearch={(term) => setSearchTerm(term)} />
+            </div>
+          ),
+        }
+      case "Invitaciones":
+        return {
+          leftContent: (
+            <CustomButton
+              variant="purple"
+              size="sm"
+              iconName="icon-star-mail"
+              action={{ type: "function", handler: () => {} }}
+            >
+              Invitaciones
+            </CustomButton>
+          ),
+          rightContent: (
+            <div className="w-[300px]">
+              <CustomSearchbar placeholder="Buscar empleados" onSearch={(term) => setSearchTerm(term)} />
+            </div>
+          ),
+        }
+      case "Aplicantes":
+        return {
+          leftContent: (
+            <CustomButton
+              variant="purple"
+              size="sm"
+              iconName="icon-document"
+              action={{ type: "function", handler: () => {} }}
+            >
+              Aplicantes
+            </CustomButton>
+          ),
+          rightContent: (
+            <div className="w-[300px]">
+              <CustomSearchbar placeholder="Buscar empleados" onSearch={(term) => setSearchTerm(term)} />
+            </div>
+          ),
+        }
+      case "Sugerencias":
+        return {
+          leftContent: (
+            <CustomButton
+              variant="purple"
+              size="sm"
+              iconName="icon-medal"
+              action={{ type: "function", handler: () => {} }}
+            >
+              Sugerencias
+            </CustomButton>
+          ),
+          rightContent: (
+            <div className="w-[300px]">
+              <CustomSearchbar placeholder="Buscar empleados" onSearch={(term) => setSearchTerm(term)} />
+            </div>
+          ),
+        }
+      default:
+        return {
+          leftContent: null,
+          rightContent: null,
+        }
+    }
+  }
+
+  if (isLoading || project === null) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accenture-purple"></div>
+      </div>
+    )
+  }
+
+  const { leftContent, rightContent } = getTabSpecificElements()
+
+  return (
+    <div className="w-full">
+      {/* Header with title, breadcrumb, actions, and tab-specific elements */}
+      <PageHeader
+        title={isNewlyCreated ? "Nuevo Proyecto" : project.name || "Detalles del Proyecto"}
+        breadcrumbs={[
+          {
+            label: "Proyectos",
+            href: `/${params.employeeId}/${params.UserType}/proyectos`,
+          },
+          {
+            label: isNewlyCreated ? "Nuevo Proyecto" : project.name || "Detalles",
+            href: "#",
+          },
+        ]}
+        actions={[
+          {
+            label: "Cancelar",
+            variant: "white",
+            onClick: handleCancel,
+          },
+          {
+            label: "Guardar",
+            variant: "purple",
+            onClick: handleSave,
+            loading: isSaving,
+          },
+        ]}
+      />
+
+      {/* Tab menu */}
+      <CustomTabMenu tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
+
+      {/* Content based on active tab */}
+      {activeTab === "detalles" && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
+          {/* Left column - Project details */}
+          <div className="space-y-6">
+            <div>
+              <CustomInput
+                id="name"
+                name="name"
+                label="Nombre"
+                value={project.name}
+                onChange={handleInputChange}
+                placeholder="Ingrese el nombre del proyecto"
+              />
+            </div>
+
+            <div>
+              <CustomInput
+                id="integrantes"
+                name="integrantes"
+                label="Integrantes requeridos"
+                placeholder="Selecciona o escribe el puesto"
+                iconRight="icon-chevron-down"
+              />
+            </div>
+
+            <div>
+              <CustomInput
+                id="company"
+                name="company"
+                label="Empresa"
+                value={project.company}
+                onChange={handleInputChange}
+                placeholder="Ingrese el nombre de la empresa"
+              />
+            </div>
+
+            <div>
+              <CustomInput
+                id="description"
+                name="description"
+                label="Descripción"
+                value={project.description}
+                onChange={handleInputChange}
+                placeholder="Descripción del proyecto"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="startDate" className="block text-[16px] font-medium text-[#272329] mb-2">
+                  Fecha inicio
+                </label>
+                <DatePicker
+                  id="startDate"
+                  selected={
+                    project.startDate instanceof Date ? project.startDate : parseDate(project.startDate as string)
+                  }
+                  onChange={(date) => handleDateChange("startDate", date)}
+                  dateFormat="yyyy-MM-dd"
+                  className="flex items-center w-full rounded-[9px] border border-gray-300 bg-white px-4 py-[16px] text-[14px] text-[#272329] transition-colors placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9747ff]"
+                />
+              </div>
+              <div>
+                <label htmlFor="endDate" className="block text-[16px] font-medium text-[#272329] mb-2">
+                  Fecha fin
+                </label>
+                <DatePicker
+                  id="endDate"
+                  selected={project.endDate instanceof Date ? project.endDate : parseDate(project.endDate as string)}
+                  onChange={(date) => handleDateChange("endDate", date)}
+                  dateFormat="yyyy-MM-dd"
+                  className="flex items-center w-full rounded-[9px] border border-gray-300 bg-white px-4 py-[16px] text-[14px] text-[#272329] transition-colors placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9747ff]"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Right column - Team composition */}
+          <div>
+            {project.teamMembers.map((member, index) => (
+              <div key={member.role} className="flex justify-between items-center mb-4">
+                <span className="text-[#272329]">{member.role}</span>
+                <div className="flex items-center">
+                  <span className="w-8 text-center font-bold">{member.count}</span>
+                  <div className="flex flex-col ml-2">
+                    <button
+                      className="bg-gray-200 hover:bg-gray-300 rounded-t px-2 py-0.5 text-xs"
+                      onClick={() => handleTeamCountChange(index, true)}
+                    >
+                      +
+                    </button>
+                    <button
+                      className="bg-gray-200 hover:bg-gray-300 rounded-b px-2 py-0.5 text-xs"
+                      onClick={() => handleTeamCountChange(index, false)}
+                    >
+                      -
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div className="border-t pt-4 mt-4">
+              <div className="flex justify-between items-center">
+                <span className="font-medium">Total</span>
+                <span className="font-bold">{totalTeamMembers}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Integrantes tab */}
+      {activeTab === "Integrantes" && <IntegrantesTab searchTerm={searchTerm} />}
+
+      {/* Invitaciones tab */}
+      {activeTab === "Invitaciones" && <InvitacionesTab searchTerm={searchTerm} />}
+
+      {/* Aplicantes tab */}
+      {activeTab === "Aplicantes" && <AplicantesTab searchTerm={searchTerm} />}
+
+      {/* Sugerencias tab */}
+      {activeTab === "Sugerencias" && <SugerenciasTab searchTerm={searchTerm} />}
+    </div>
+  )
+}
