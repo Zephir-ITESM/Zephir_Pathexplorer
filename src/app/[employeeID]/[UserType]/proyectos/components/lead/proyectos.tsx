@@ -74,7 +74,7 @@ const ProyectosLead = () => {
   }
   const handleViewHistory = () => {
     // Navigate to project history page
-    router.push(`/${params.employeeId}/${params.UserType}/proyectos/historial`)
+    router.push(`/${params.employeeID}/${params.UserType}/proyectos/historial`)
   }
 
   const handleEditProject = (projectId: string) => {
