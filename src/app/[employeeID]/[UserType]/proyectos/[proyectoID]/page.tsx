@@ -10,6 +10,8 @@ import { CustomInput } from "@/components/ui/input"
 import { CustomTabMenu, type TabItem } from "@/components/ui/tab-menu"
 import { PageHeader } from "@/components/ui/header"
 import { CustomSearchbar } from "@/components/ui/searchbar"
+import {DateRangePicker} from "@heroui/date-picker";
+
 import DatePicker from "react-datepicker"
 
 // Define the project interface
@@ -376,34 +378,7 @@ export default function ProjectDetailsPage() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="startDate" className="block text-[16px] font-medium text-[#272329] mb-2">
-                  Fecha inicio
-                </label>
-                <DatePicker
-                  id="startDate"
-                  selected={
-                    project.startDate instanceof Date ? project.startDate : parseDate(project.startDate as string)
-                  }
-                  onChange={(date) => handleDateChange("startDate", date)}
-                  dateFormat="yyyy-MM-dd"
-                  className="flex items-center w-full rounded-[9px] border border-gray-300 bg-white px-4 py-[16px] text-[14px] text-[#272329] transition-colors placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9747ff]"
-                />
-              </div>
-              <div>
-                <label htmlFor="endDate" className="block text-[16px] font-medium text-[#272329] mb-2">
-                  Fecha fin
-                </label>
-                <DatePicker
-                  id="endDate"
-                  selected={project.endDate instanceof Date ? project.endDate : parseDate(project.endDate as string)}
-                  onChange={(date) => handleDateChange("endDate", date)}
-                  dateFormat="yyyy-MM-dd"
-                  className="flex items-center w-full rounded-[9px] border border-gray-300 bg-white px-4 py-[16px] text-[14px] text-[#272329] transition-colors placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9747ff]"
-                />
-              </div>
-            </div>
+            <DateRangePicker className="max-w" label="Duracion de proyecto" />
           </div>
 
           {/* Right column - Team composition */}
