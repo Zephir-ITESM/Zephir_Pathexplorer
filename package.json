@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroui/button": "2.2.19",
+    "@heroui/checkbox": "^2.3.18",
     "@heroui/code": "2.2.14",
     "@heroui/date-picker": "^2.3.19",
     "@heroui/input": "^2.4.19",
