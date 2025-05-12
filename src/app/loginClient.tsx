@@ -1,18 +1,23 @@
 'use client';
 
+import React from 'react';
 import { useActionState } from 'react';
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { login } from '@/auth/actions';
 import { Loader2 } from 'lucide-react';
-import { CustomInput } from '@/components/ui/input';
-import { CustomPasswordInput } from '@/components/ui/password-input';
-import { CustomButton } from '@/components/ui/button';
+import { Input } from '@heroui/input';
+import { Button } from '@heroui/button'
+import { Checkbox } from '@heroui/checkbox'
+import { Icon } from '@/components/ui/icons';
 
 export default function LoginClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const invalidToken = searchParams.get('invalidToken') === 'true';
+  const [isVisible, setIsVisible] = React.useState(false);
+
+  const toggleVisibility = () => setIsVisible(!isVisible);
 
   const [state, formAction, isPending] = useActionState(login, {
     success: false,
@@ -50,41 +55,61 @@ export default function LoginClient() {
         </div>
       )}
 
-      <div className="space-y-2">
-        <CustomInput
-          id="email"
-          name="email"
-          type="email"
-          label="Correo"
-          placeholder="correo@ejemplo.com"
-          disabled={isPending}
-          required
-        />
-      </div>
 
-      <div className="space-y-2">
-        <CustomPasswordInput
-          id="password"
-          name="password"
-          label="Contraseña"
-          placeholder=""
-          disabled={isPending}
-          required
-        />
+      <div className='flex flex-col gap-y-4'>
+        <div className="space-y-2">
+          <Input
+          id='email'
+          fullWidth={true}
+          name='email'
+          isRequired
+          className="max-w"
+          label="Correo"
+          type="email"
+          /> 
+        </div>
+
+        <div className="space-y-2">
+          <Input
+            className="max-w"
+            fullWidth={true}
+            endContent={
+              <div className="flex items-center justify-center h-full">
+                <button
+                  aria-label="toggle password visibility"
+                  className="focus:outline-none m-auto"
+                  type="button"
+                  onClick={toggleVisibility}
+                >
+                  {isVisible ? (
+                    <Icon
+                      name="icon-crossed-eye"
+                      className="text-2xl text-default-400 pointer-events-none"
+                    />
+                  ) : (
+                    <Icon
+                      name="icon-eye"
+                      className="text-2xl text-default-400 pointer-events-none"
+                      />
+                  )}
+                </button>
+              </div>
+            }
+            label="Contraseña"
+            type={isVisible ? "text" : "password"}
+            id='password'
+            name='password'
+            isRequired
+          />
+        </div>
       </div>
 
       <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <input
-            id="remember-me"
-            name="remember-me"
-            type="checkbox"
-            className="h-4 w-4 border-gray-300 rounded text-[#a100ff] focus:ring-[#a100ff]"
-            disabled={isPending}
-          />
-          <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-            Mantener sesión
-          </label>
+          <Checkbox
+            color="primary">
+              Mantener Sesion
+          </Checkbox>
         </div>
 
         <div className="text-sm">
@@ -93,23 +118,13 @@ export default function LoginClient() {
           </link>*/}
         </div>
       </div>
-
-      <CustomButton
-        disabled={isPending}
-        variant="purple"
-        size="sm"
-        className="w-full"
-        action={{ type: 'submit' }}
-      >
-        {isPending ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Iniciando sesión...
-          </>
-        ) : (
-          'Iniciar sesión'
-        )}
-      </CustomButton>
+      <Button 
+        color="default" 
+        type="submit"
+        fullWidth={true}
+        >
+        Iniciar sesión
+      </Button>
     </form>
   );
 }
