@@ -64,7 +64,7 @@ const ProyectosLead = () => {
       console.log("Created new project with ID:", mockProjectId)
 
       // Navigate to the new project details page
-      router.push(`/${params.employeeId}/${params.UserType}/proyectos/${mockProjectId}`)
+      router.push(`/${params.employeeID}/${params.UserType}/proyectos/${mockProjectId}`)
     } catch (error) {
       console.error("Error creating project:", error)
       // Handle error (could add toast notification here)
