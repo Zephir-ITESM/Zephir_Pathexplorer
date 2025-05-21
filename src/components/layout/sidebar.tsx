@@ -21,7 +21,7 @@ export function AppSidebar() {
     },
     {
       name: "Carrera",
-      path: `/${userId}/carrera/dashboard`,
+      path: `/${userId}/carrera/form`,
     },
     {
       name: "Habilidades",

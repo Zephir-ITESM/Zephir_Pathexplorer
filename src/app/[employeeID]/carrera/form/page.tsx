@@ -9,27 +9,21 @@ export default function CarreraPage() {
 
   // Create a callback that explicitly only changes the step without navigation
   const handleNext = useCallback(() => {
-    console.log("Moving to next step")
     setCurrentStep((prev) => prev + 1)
   }, [])
 
   const handleSkip = useCallback(() => {
-    console.log("Skipping to next step")
     setCurrentStep((prev) => prev + 1)
   }, [])
 
   const handleBack = useCallback(() => {
-    console.log("Moving back a step")
     setCurrentStep((prev) => prev - 1)
   }, [])
 
   // Manejador para cuando se selecciona un plan de carrera
   const handleCareerSelect = useCallback((careerOptionId: number) => {
     setSelectedCareerPath(careerOptionId)
-    console.log("Selected career path:", careerOptionId)
   }, [])
-
-  console.log("Current step:", currentStep)
 
   // Render the appropriate component based on the current step
   return (
