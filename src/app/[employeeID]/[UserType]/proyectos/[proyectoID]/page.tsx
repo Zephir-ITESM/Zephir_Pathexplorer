@@ -10,9 +10,10 @@ import { CustomInput } from "@/components/ui/input"
 import { CustomTabMenu, type TabItem } from "@/components/ui/tab-menu"
 import { PageHeader } from "@/components/ui/header"
 import { CustomSearchbar } from "@/components/ui/searchbar"
-import {DateRangePicker} from "@heroui/date-picker";
-
-import DatePicker from "react-datepicker"
+import { DateRangePicker } from "@heroui/date-picker";
+import { Input } from "@heroui/input"
+import { NumberInput } from "@heroui/number-input"
+import { Autocomplete } from "@heroui/autocomplete"
 
 // Define the project interface
 interface Project {
@@ -46,6 +47,22 @@ export default function ProjectDetailsPage() {
     { id: "Aplicantes", label: "Aplicantes", icon: "icon-clipboard" },
     { id: "Sugerencias", label: "Sugerencias", icon: "icon-medal" },
   ]
+
+  const projectRoles = [
+    {key: "frontend-dev", label: "Frontend Developer"},
+    {key: "backend-dev", label: "Backend Developer"},
+    {key: "fullstack-dev", label: "Fullstack Developer"},
+    {key: "devops-engineer", label: "DevOps Engineer"},
+    {key: "qa-engineer", label: "QA Engineer"},
+    {key: "ui-designer", label: "UI Designer"},
+    {key: "ux-designer", label: "UX Designer"},
+    {key: "product-manager", label: "Product Manager"},
+    {key: "project-manager", label: "Project Manager"},
+    {key: "scrum-master", label: "Scrum Master"},
+    {key: "data-scientist", label: "Data Scientist"},
+    {key: "data-engineer", label: "Data Engineer"},
+    {key: "security-engineer", label: "Security Engineer"},
+  ];
 
   useEffect(() => {
     const projectId = params.proyectoID as string
@@ -295,8 +312,6 @@ export default function ProjectDetailsPage() {
     )
   }
 
-  const { leftContent, rightContent } = getTabSpecificElements()
-
   return (
     <div className="w-full">
       {/* Header with title, breadcrumb, actions, and tab-specific elements */}
@@ -336,12 +351,11 @@ export default function ProjectDetailsPage() {
           {/* Left column - Project details */}
           <div className="space-y-6">
             <div>
-              <CustomInput
-                id="name"
-                name="name"
+              <Input
+                type="text"
+                id="projectName"
+                name="projectName"
                 label="Nombre"
-                value={project.name}
-                onChange={handleInputChange}
                 placeholder="Ingrese el nombre del proyecto"
               />
             </div>
@@ -357,53 +371,37 @@ export default function ProjectDetailsPage() {
             </div>
 
             <div>
-              <CustomInput
+              <Input
+                type="text"
                 id="company"
                 name="company"
                 label="Empresa"
-                value={project.company}
-                onChange={handleInputChange}
                 placeholder="Ingrese el nombre de la empresa"
               />
             </div>
 
             <div>
-              <CustomInput
+              <Input
+                type="text"
                 id="description"
                 name="description"
                 label="Descripción"
-                value={project.description}
-                onChange={handleInputChange}
-                placeholder="Descripción del proyecto"
+                placeholder="Descripcion del proyecto"
               />
             </div>
 
-            <DateRangePicker className="max-w" label="Duracion de proyecto" />
+            <DateRangePicker 
+              className="max-w" 
+              label="Duracion de proyecto" 
+            />
           </div>
 
           {/* Right column - Team composition */}
-          <div>
+          <div className="space-y-6">
             {project.teamMembers.map((member, index) => (
-              <div key={member.role} className="flex justify-between items-center mb-4">
-                <span className="text-[#272329]">{member.role}</span>
-                <div className="flex items-center">
-                  <span className="w-8 text-center font-bold">{member.count}</span>
-                  <div className="flex flex-col ml-2">
-                    <button
-                      className="bg-gray-200 hover:bg-gray-300 rounded-t px-2 py-0.5 text-xs"
-                      onClick={() => handleTeamCountChange(index, true)}
-                    >
-                      +
-                    </button>
-                    <button
-                      className="bg-gray-200 hover:bg-gray-300 rounded-b px-2 py-0.5 text-xs"
-                      onClick={() => handleTeamCountChange(index, false)}
-                    >
-                      -
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <NumberInput 
+                label={member.role}
+              />
             ))}
             <div className="border-t pt-4 mt-4">
               <div className="flex justify-between items-center">

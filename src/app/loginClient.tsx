@@ -23,6 +23,7 @@ export default function LoginClient() {
     success: false,
     message: '',
     redirectTo: '',
+    sessionId: '',
   });
 
   useEffect(() => {

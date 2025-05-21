@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { Metadata, Viewport } from "next";
 import { Providers } from "./providers";
 import { fontSans } from "@/config/fonts";
+import SessionManager from "@/components/session-manager";
 
 export const metadata: Metadata = {
   title: "Zephir Pathexplorer",
@@ -14,7 +15,6 @@ export const metadata: Metadata = {
     apple: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Accenture%20logo-AGEKhFu1kFFPMEmAqzDPslxaE0Dnpp.png",
   },
 }
-
 
 export const viewport: Viewport = {
   themeColor: [
@@ -39,6 +39,7 @@ export default function RootLayout({
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light", forcedTheme: "light" }}>
           {children}
+          <SessionManager />
         </Providers>
       </body>
     </html>

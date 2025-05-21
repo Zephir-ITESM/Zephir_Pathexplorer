@@ -1,4 +1,3 @@
-// Add console logs to track cookie operations
 "use server"
 
 import { cookies } from "next/headers"
@@ -6,6 +5,7 @@ import { redirect } from "next/navigation"
 import { loginUser } from "@/services/api"
 import { jwtDecode } from "jwt-decode"
 import { mapRoleIdToName } from "./utils"
+import { v4 as uuidv4 } from "uuid"
 
 export type CurrentUser = {
   userId: string | null
@@ -15,42 +15,32 @@ export type CurrentUser = {
 
 export async function getCurrentUser(): Promise<CurrentUser> {
   try {
-    const cookieStore = cookies()
-    const token = (await cookieStore).get("auth_token")?.value
-    const userType = (await cookieStore).get("user_type")?.value
-    const userId = (await cookieStore).get("user_id")?.value
+    const cookieStore = await cookies()
+    const token = cookieStore.get("auth_token")?.value
+    const userId = cookieStore.get("user_id")?.value
+    const userType = cookieStore.get("user_type")?.value
 
     if (token) {
       try {
-        const decoded = jwtDecode<{
-          id_usuario: string
-          exp: number
-          id_tipo_usuario?: number
-          tipo_usuario?: string
-        }>(token)
-
-        const currentTime = Math.floor(Date.now() / 1000)
-        if (decoded.exp < currentTime) {
-          return { userId: null, role: null, token: null }
-        }
-
-        let effectiveRole = userType
-        if (!effectiveRole) {
-          if (decoded.tipo_usuario) {
-            effectiveRole = decoded.tipo_usuario
-          } else if (decoded.id_tipo_usuario) {
-            effectiveRole = mapRoleIdToName(decoded.id_tipo_usuario)
-          }
-        }
-
-        return {
-          userId: userId || decoded.id_usuario,
-          role: effectiveRole ?? null,
-          token,
+        // Verify token is not expired
+        const decoded = jwtDecode<{ exp: number }>(token)
+        if (decoded.exp && decoded.exp < Date.now() / 1000) {
+          // Token expired, clear cookies and redirect to login
+          cookieStore.delete("auth_token")
+          cookieStore.delete("refresh_token")
+          cookieStore.delete("user_type")
+          cookieStore.delete("user_id")
+          cookieStore.delete("session_id")
+          redirect("/login?session=expired")
         }
       } catch (error) {
-        console.error("Error decoding token:", error)
-        return { userId: null, role: null, token: null }
+        // Invalid token, clear cookies
+        cookieStore.delete("auth_token")
+        cookieStore.delete("refresh_token")
+        cookieStore.delete("user_type")
+        cookieStore.delete("user_id")
+        cookieStore.delete("session_id")
+        redirect("/login?invalidToken=true")
       }
     }
 
@@ -100,32 +90,56 @@ export async function login(prevState: any, formData: FormData) {
     // Set the token in cookies
     const cookieStore = await cookies()
 
-    // Calculate expiry if remember me is checked (30 days in seconds)
-    const maxAge = rememberMe ? 30 * 24 * 60 * 60 : undefined
+    // Calculate expiry if remember me is checked (30 days in seconds for refresh token)
+    const accessTokenMaxAge = 15 * 60 // 15 minutes
+    const refreshTokenMaxAge = rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60 // 30 days or 1 day
+
+    // Generate a unique session ID
+    const sessionId = uuidv4()
+
+    // Set the access token with short expiry
     cookieStore.set("auth_token", data.token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure: true, // Always use secure in production and development
+      sameSite: "strict", // Stronger CSRF protection
       path: "/",
-      maxAge,
+      maxAge: accessTokenMaxAge,
     })
 
-    // Store user type in a separate cookie for client-side access
+    // Set the refresh token with longer expiry
+    cookieStore.set("refresh_token", data.refreshToken || data.token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      path: "/",
+      maxAge: refreshTokenMaxAge,
+    })
+
+    // Store user type in a separate cookie
     cookieStore.set("user_type", userRole, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure: true,
+      sameSite: "strict",
       path: "/",
-      maxAge,
+      maxAge: refreshTokenMaxAge,
     })
 
-    // Store user ID in a separate cookie for client-side access
+    // Store user ID in a separate cookie
     cookieStore.set("user_id", data.user.id_usuario, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure: true,
+      sameSite: "strict",
       path: "/",
-      maxAge,
+      maxAge: refreshTokenMaxAge,
+    })
+
+    // Store session ID for CSRF protection
+    cookieStore.set("session_id", sessionId, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      path: "/",
+      maxAge: refreshTokenMaxAge,
     })
 
     // Correctly redirect to dashboard without including UserType in the URL
@@ -135,6 +149,7 @@ export async function login(prevState: any, formData: FormData) {
       success: true,
       message: "Inicio de sesión exitoso",
       redirectTo,
+      sessionId,
     }
   } catch (error: any) {
     console.error("Login error:", error)
@@ -147,9 +162,33 @@ export async function login(prevState: any, formData: FormData) {
 
 export async function logout() {
   const cookieStore = await cookies()
+
+  // Get the refresh token before deleting cookies
+  const refreshToken = cookieStore.get("refresh_token")?.value
+
+  // Clear all auth cookies
   cookieStore.delete("auth_token")
+  cookieStore.delete("refresh_token")
   cookieStore.delete("user_type")
   cookieStore.delete("user_id")
+  cookieStore.delete("session_id")
+
+  // Invalidate the session on the server if we have a refresh token
+  if (refreshToken) {
+    try {
+      // Call your API to invalidate the token on the server side
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ refreshToken }),
+      })
+    } catch (error) {
+      console.error("Logout error:", error)
+      // Continue with logout even if server-side invalidation fails
+    }
+  }
+
   redirect("/")
 }
-

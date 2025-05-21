@@ -1,0 +1,90 @@
+{
+  "priorityOptions": {
+    "Desarrollo profesional": [
+      { "label": "Crecimiento profesional", "key": "Crecimiento profesional" },
+      { "label": "Aprendizaje constante", "key": "Aprendizaje constante" },
+      { "label": "Proyectos desafiantes", "key": "Proyectos desafiantes" },
+      { "label": "Desarrollo de habilidades blandas", "key": "Desarrollo de habilidades blandas" },
+      { "label": "Acceso a formación continua", "key": "Acceso a formación continua" }
+    ],
+    "Ambiente Laboral": [
+      { "label": "Buen ambiente laboral", "key": "Buen ambiente laboral" },
+      { "label": "Balance vida-trabajo", "key": "Balance vida-trabajo" },
+      { "label": "Liderazgo positivo", "key": "Liderazgo positivo" },
+      { "label": "Trabajo en equipo", "key": "Trabajo en equipo" },
+      { "label": "Diversidad e inclusión", "key": "Diversidad e inclusión" }
+    ],
+    "Compensacion y estabilidad": [
+      { "label": "Estabilidad económica", "key": "Estabilidad económica" },
+      { "label": "Reconocimiento del esfuerzo", "key": "Reconocimiento del esfuerzo" },
+      { "label": "Flexibilidad horaria", "key": "Flexibilidad horaria" },
+      { "label": "Seguridad laboral", "key": "Seguridad laboral" }
+    ],
+    "Impacto y valores": [
+      { "label": "Ética profesional", "key": "Ética profesional" },
+      { "label": "Innovación tecnológica", "key": "Innovación tecnológica" },
+      { "label": "Impacto social", "key": "Impacto social" },
+      { "label": "Oportunidades internacionales", "key": "Oportunidades internacionales" },
+      { "label": "Autonomía en decisiones", "key": "Autonomía en decisiones" },
+      { "label": "Retroalimentación constructiva", "key": "Retroalimentación constructiva" }
+    ]
+  },
+  "objectiveOptions": {
+    "Corto Plazo (0-1 año)": [
+      { "label": "Conseguir mi primer empleo", "key": "Conseguir mi primer empleo" },
+      { "label": "Mejorar mi inglés técnico", "key": "Mejorar mi inglés técnico" },
+      { "label": "Certificarme en tecnología clave", "key": "Certificarme en tecnología clave" },
+      { "label": "Crear un portafolio sólido", "key": "Crear un portafolio sólido" },
+      { "label": "Publicar un artículo técnico", "key": "Publicar un artículo técnico" }
+    ],
+    "Mediano Plazo (1-3 años)": [
+      { "label": "Liderar un pequeño equipo", "key": "Liderar un pequeño equipo" },
+      { "label": "Obtener un ascenso", "key": "Obtener un ascenso" },
+      { "label": "Participar en conferencias", "key": "Participar en conferencias" },
+      { "label": "Colaborar en proyectos open source", "key": "Colaborar en proyectos open source" },
+      { "label": "Trabajar en una empresa top", "key": "Trabajar en una empresa top" }
+    ],
+    "Largo Plazo (3+ años)": [
+      { "label": "Trabajar en el extranjero", "key": "Trabajar en el extranjero" },
+      { "label": "Desarrollar un producto propio", "key": "Desarrollar un producto propio" },
+      { "label": "Empezar una maestría", "key": "Empezar una maestría" },
+      { "label": "Especializarme en IA", "key": "Especializarme en IA" },
+      { "label": "Fundar una startup", "key": "Fundar una startup" },
+      { "label": "Ser mentor de nuevos talentos", "key": "Ser mentor de nuevos talentos" },
+      { "label": "Lograr independencia financiera", "key": "Lograr independencia financiera" },
+      { "label": "Convertirme en arquitecto de software", "key": "Convertirme en arquitecto de software" },
+      { "label": "Patentar una idea", "key": "Patentar una idea" },
+      { "label": "Ser referente en mi industria", "key": "Ser referente en mi industria" }
+    ]
+  },
+  "interestOptions": {
+    "Desarrollo": [
+      { "label": "Desarrollo móvil", "key": "Desarrollo móvil" },
+      { "label": "Frontend con React", "key": "Frontend con React" },
+      { "label": "Backend en Python", "key": "Backend en Python" },
+      { "label": "Arquitectura de software", "key": "Arquitectura de software" },
+      { "label": "DevOps", "key": "DevOps" }
+    ],
+    "Inteligencia Artificial": [
+      { "label": "Inteligencia Artificial", "key": "Inteligencia Artificial" },
+      { "label": "Machine Learning", "key": "Machine Learning" },
+      { "label": "Ciencia de datos", "key": "Ciencia de datos" },
+      { "label": "Simulación de agentes", "key": "Simulación de agentes" }
+    ],
+    "Tecnologías Emergentes": [
+      { "label": "Blockchain", "key": "Blockchain" },
+      { "label": "Realidad aumentada", "key": "Realidad aumentada" },
+      { "label": "Realidad virtual", "key": "Realidad virtual" },
+      { "label": "Internet de las cosas", "key": "Internet de las cosas" },
+      { "label": "Cloud computing", "key": "Cloud computing" }
+    ],
+    "Especialidades": [
+      { "label": "Ciberseguridad", "key": "Ciberseguridad" },
+      { "label": "Robótica", "key": "Robótica" },
+      { "label": "Juegos con Unity", "key": "Juegos con Unity" },
+      { "label": "Ética en tecnología", "key": "Ética en tecnología" },
+      { "label": "Sistemas embebidos", "key": "Sistemas embebidos" },
+      { "label": "Automatización industrial", "key": "Automatización industrial" }
+    ]
+  }
+}

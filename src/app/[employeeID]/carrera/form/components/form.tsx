@@ -5,9 +5,11 @@ import type React from "react"
 import { useState } from "react"
 import { CustomButton } from "@/components/ui/button"
 import { CustomTag } from "@/components/ui/tag"
-import { CustomSelect } from "@/components/ui/select"
 import { CareerTopBackground } from "@/components/ui/backgrounds/index"
 import { Icon } from "@/components/ui/icons"
+import { Autocomplete, AutocompleteSection, AutocompleteItem } from "@heroui/autocomplete"
+import VerticalDivider from "@/components/layout/divider"
+import careerOptions from "@/components/data/career.json"
 
 interface FormScreenProps {
   onNext: () => void
@@ -16,129 +18,7 @@ interface FormScreenProps {
 
 export default function FormScreen({ onNext, onSkip }: FormScreenProps) {
   // Grouped options for each category
-  const priorityOptions = [
-    {
-      label: "Desarrollo Profesional",
-      options: [
-        { value: "Crecimiento profesional", label: "Crecimiento profesional" },
-        { value: "Aprendizaje constante", label: "Aprendizaje constante" },
-        { value: "Proyectos desafiantes", label: "Proyectos desafiantes" },
-        { value: "Desarrollo de habilidades blandas", label: "Desarrollo de habilidades blandas" },
-        { value: "Acceso a formación continua", label: "Acceso a formación continua" },
-      ],
-    },
-    {
-      label: "Ambiente Laboral",
-      options: [
-        { value: "Buen ambiente laboral", label: "Buen ambiente laboral" },
-        { value: "Balance vida-trabajo", label: "Balance vida-trabajo" },
-        { value: "Liderazgo positivo", label: "Liderazgo positivo" },
-        { value: "Trabajo en equipo", label: "Trabajo en equipo" },
-        { value: "Diversidad e inclusión", label: "Diversidad e inclusión" },
-      ],
-    },
-    {
-      label: "Compensación y Estabilidad",
-      options: [
-        { value: "Estabilidad económica", label: "Estabilidad económica" },
-        { value: "Reconocimiento del esfuerzo", label: "Reconocimiento del esfuerzo" },
-        { value: "Flexibilidad horaria", label: "Flexibilidad horaria" },
-        { value: "Seguridad laboral", label: "Seguridad laboral" },
-      ],
-    },
-    {
-      label: "Impacto y Valores",
-      options: [
-        { value: "Ética profesional", label: "Ética profesional" },
-        { value: "Innovación tecnológica", label: "Innovación tecnológica" },
-        { value: "Impacto social", label: "Impacto social" },
-        { value: "Oportunidades internacionales", label: "Oportunidades internacionales" },
-        { value: "Autonomía en decisiones", label: "Autonomía en decisiones" },
-        { value: "Retroalimentación constructiva", label: "Retroalimentación constructiva" },
-      ],
-    },
-  ]
-
-  const objectiveOptions = [
-    {
-      label: "Corto Plazo (0-1 año)",
-      options: [
-        { value: "Conseguir mi primer empleo", label: "Conseguir mi primer empleo" },
-        { value: "Mejorar mi inglés técnico", label: "Mejorar mi inglés técnico" },
-        { value: "Certificarme en tecnología clave", label: "Certificarme en tecnología clave" },
-        { value: "Crear un portafolio sólido", label: "Crear un portafolio sólido" },
-        { value: "Publicar un artículo técnico", label: "Publicar un artículo técnico" },
-      ],
-    },
-    {
-      label: "Mediano Plazo (1-3 años)",
-      options: [
-        { value: "Liderar un pequeño equipo", label: "Liderar un pequeño equipo" },
-        { value: "Obtener un ascenso", label: "Obtener un ascenso" },
-        { value: "Participar en conferencias", label: "Participar en conferencias" },
-        { value: "Colaborar en proyectos open source", label: "Colaborar en proyectos open source" },
-        { value: "Trabajar en una empresa top", label: "Trabajar en una empresa top" },
-      ],
-    },
-    {
-      label: "Largo Plazo (3+ años)",
-      options: [
-        { value: "Trabajar en el extranjero", label: "Trabajar en el extranjero" },
-        { value: "Desarrollar un producto propio", label: "Desarrollar un producto propio" },
-        { value: "Empezar una maestría", label: "Empezar una maestría" },
-        { value: "Especializarme en IA", label: "Especializarme en IA" },
-        { value: "Fundar una startup", label: "Fundar una startup" },
-        { value: "Ser mentor de nuevos talentos", label: "Ser mentor de nuevos talentos" },
-        { value: "Lograr independencia financiera", label: "Lograr independencia financiera" },
-        { value: "Convertirme en arquitecto de software", label: "Convertirme en arquitecto de software" },
-        { value: "Patentar una idea", label: "Patentar una idea" },
-        { value: "Ser referente en mi industria", label: "Ser referente en mi industria" },
-      ],
-    },
-  ]
-
-  const interestOptions = [
-    {
-      label: "Desarrollo",
-      options: [
-        { value: "Desarrollo móvil", label: "Desarrollo móvil" },
-        { value: "Frontend con React", label: "Frontend con React" },
-        { value: "Backend en Python", label: "Backend en Python" },
-        { value: "Arquitectura de software", label: "Arquitectura de software" },
-        { value: "DevOps", label: "DevOps" },
-      ],
-    },
-    {
-      label: "Inteligencia Artificial",
-      options: [
-        { value: "Inteligencia Artificial", label: "Inteligencia Artificial" },
-        { value: "Machine Learning", label: "Machine Learning" },
-        { value: "Ciencia de datos", label: "Ciencia de datos" },
-        { value: "Simulación de agentes", label: "Simulación de agentes" },
-      ],
-    },
-    {
-      label: "Tecnologías Emergentes",
-      options: [
-        { value: "Blockchain", label: "Blockchain" },
-        { value: "Realidad aumentada", label: "Realidad aumentada" },
-        { value: "Realidad virtual", label: "Realidad virtual" },
-        { value: "Internet de las cosas", label: "Internet de las cosas" },
-        { value: "Cloud computing", label: "Cloud computing" },
-      ],
-    },
-    {
-      label: "Especialidades",
-      options: [
-        { value: "Ciberseguridad", label: "Ciberseguridad" },
-        { value: "Robótica", label: "Robótica" },
-        { value: "Juegos con Unity", label: "Juegos con Unity" },
-        { value: "Ética en tecnología", label: "Ética en tecnología" },
-        { value: "Sistemas embebidos", label: "Sistemas embebidos" },
-        { value: "Automatización industrial", label: "Automatización industrial" },
-      ],
-    },
-  ]
+  const { priorityOptions, objectiveOptions, interestOptions } = careerOptions
 
   // Estado para listas de elementos seleccionados
   const [priorities, setPriorities] = useState<string[]>([])
@@ -163,7 +43,7 @@ export default function FormScreen({ onNext, onSkip }: FormScreenProps) {
   ) => {
     if (item && !list.includes(item) && list.length < 3) {
       setList([...list, item])
-      // Make sure to reset the selected value to empty string
+      // Reset the selected value
       setSelected("")
     }
   }
@@ -234,27 +114,69 @@ export default function FormScreen({ onNext, onSkip }: FormScreenProps) {
               <h1 className="text-5xl font-bold text-center text-white mb-10">Ingresa tu información</h1>
             </div>
 
-            <div className="w-full flex justify-center gap-20">
+            <div className="w-full grid grid-cols-3 gap-24">
+              {/* dividers */}
+              <VerticalDivider position="left" />
+              <VerticalDivider position="right" />
+
               {/* Priorities Section */}
-              <section className="space-y-4 w-xs">
+              <section className="col-span-1 space-y-4">
                 <div className="flex items-center justify-center gap-1 mb-1">
                   <Icon name="icon-search-heart" className="text-black" size="xxl" />
                 </div>
                 <h2 className="text-2xl font-bold text-gray-800">Prioridades</h2>
-                <p className="text-gray-600">Selecciona 3 aspectos más importantes para ti en tu carrera profesional</p>
+                <p className="text-gray-600 max-w-xs mx-auto text-center">
+                  Selecciona 3 aspectos más importantes para ti en tu carrera profesional
+                </p>
 
-                <CustomSelect
-                  options={priorityOptions}
-                  value=""
-                  onChange={(value) => {
-                    if (typeof value === "string" && value) {
-                      addItem(value, priorities, setPriorities, setPrioritySelected)
-                    }
-                  }}
-                  placeholder={`Elige una prioridad (${priorities.length}/3)`}
-                  disabled={priorities.length >= 3}
-                  fullWidth={true}
-                />
+                <Autocomplete
+                  className="w-full"
+                  label={`Elige una prioridad (${priorities.length}/3)`}
+                  isDisabled={priorities.length >= 3}
+                  value={prioritySelected}
+                  onInputChange={(value) => setPrioritySelected(value)}
+                >
+                  <AutocompleteSection title="Dessarrollo profesional" showDivider>
+                    {priorityOptions["Desarrollo profesional"].map((option) => (
+                      <AutocompleteItem
+                        key={option.key}
+                        onClick={() => addItem(option.label, priorities, setPriorities, setPrioritySelected)}
+                      >
+                        {option.label}
+                      </AutocompleteItem>
+                    ))}
+                  </AutocompleteSection>
+                  <AutocompleteSection title="Ambiente Laboral" showDivider>
+                    {priorityOptions["Ambiente Laboral"].map((option) => (
+                      <AutocompleteItem
+                        key={option.key}
+                        onClick={() => addItem(option.label, priorities, setPriorities, setPrioritySelected)}
+                      >
+                        {option.label}
+                      </AutocompleteItem>
+                    ))}
+                  </AutocompleteSection>
+                  <AutocompleteSection title="Compensacion y estabilidad" showDivider>
+                    {priorityOptions["Compensacion y estabilidad"].map((option) => (
+                      <AutocompleteItem
+                        key={option.key}
+                        onClick={() => addItem(option.label, priorities, setPriorities, setPrioritySelected)}
+                      >
+                        {option.label}
+                      </AutocompleteItem>
+                    ))}
+                  </AutocompleteSection>
+                  <AutocompleteSection title="Impacto y valores">
+                    {priorityOptions["Impacto y valores"].map((option) => (
+                      <AutocompleteItem
+                        key={option.key}
+                        onClick={() => addItem(option.label, priorities, setPriorities, setPrioritySelected)}
+                      >
+                        {option.label}
+                      </AutocompleteItem>
+                    ))}
+                  </AutocompleteSection>
+                </Autocomplete>
 
                 {priorities.length > 0 && (
                   <div className="flex flex-col gap-4 mt-6">
@@ -273,51 +195,54 @@ export default function FormScreen({ onNext, onSkip }: FormScreenProps) {
                 )}
               </section>
 
-              <div className="flex items-center justify-center">
-                <svg width="2" height="797" viewBox="0 0 2 797" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M1.00003 796L1 1"
-                    stroke="url(#paint0_linear_419_5559)"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                  <defs>
-                    <linearGradient
-                      id="paint0_linear_419_5559"
-                      x1="1.5"
-                      y1="1"
-                      x2="1.50003"
-                      y2="796"
-                      gradientUnits="userSpaceOnUse"
-                    >
-                      <stop stopColor="#272329" stopOpacity="0" />
-                      <stop offset="0.5" stopColor="#272329" />
-                      <stop offset="1" stopColor="#272329" stopOpacity="0" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-              </div>
-
               {/* Objectives Section */}
-              <section className="space-y-4 w-xs">
+              <section className="col-span-1 space-y-4">
                 <div className="flex items-center justify-center gap-1 mb-1">
                   <Icon name="icon-ranking" className="text-black" size="xxl" />
                 </div>
                 <h2 className="text-2xl font-bold text-gray-800">Objetivos</h2>
-                <p className="text-gray-600">Selecciona 3 metas profesionales a corto, mediano y largo plazo</p>
+                <p className="text-gray-600 max-w-xs mx-auto text-center">
+                  Selecciona 3 metas profesionales a corto, mediano y largo plazo
+                </p>
 
-                <CustomSelect
-                  options={objectiveOptions}
-                  value=""
-                  onChange={(value) => {
-                    if (typeof value === "string" && value) {
-                      addItem(value, objectives, setObjectives, setObjectiveSelected)
-                    }
-                  }}
-                  placeholder={`Elige un objetivo (${objectives.length}/3)`}
-                  disabled={objectives.length >= 3}
-                  fullWidth={true}
-                />
+                <Autocomplete
+                  className="w-full"
+                  label={`Elige un objetivo (${objectives.length}/3)`}
+                  isDisabled={objectives.length >= 3}
+                  value={objectiveSelected}
+                  onInputChange={(value) => setObjectiveSelected(value)}
+                >
+                  <AutocompleteSection title="Corto Plazo (0-1 año)" showDivider>
+                    {objectiveOptions["Corto Plazo (0-1 año)"].map((option) => (
+                      <AutocompleteItem
+                        key={option.key}
+                        onClick={() => addItem(option.label, objectives, setObjectives, setObjectiveSelected)}
+                      >
+                        {option.label}
+                      </AutocompleteItem>
+                    ))}
+                  </AutocompleteSection>
+                  <AutocompleteSection title="Mediano Plazo (1-3 años)" showDivider>
+                    {objectiveOptions["Mediano Plazo (1-3 años)"].map((option) => (
+                      <AutocompleteItem
+                        key={option.key}
+                        onClick={() => addItem(option.label, objectives, setObjectives, setObjectiveSelected)}
+                      >
+                        {option.label}
+                      </AutocompleteItem>
+                    ))}
+                  </AutocompleteSection>
+                  <AutocompleteSection title="Largo Plazo (3+ años)">
+                    {objectiveOptions["Largo Plazo (3+ años)"].map((option) => (
+                      <AutocompleteItem
+                        key={option.key}
+                        onClick={() => addItem(option.label, objectives, setObjectives, setObjectiveSelected)}
+                      >
+                        {option.label}
+                      </AutocompleteItem>
+                    ))}
+                  </AutocompleteSection>
+                </Autocomplete>
 
                 {objectives.length > 0 && (
                   <div className="flex flex-col gap-4 mt-6">
@@ -336,51 +261,62 @@ export default function FormScreen({ onNext, onSkip }: FormScreenProps) {
                 )}
               </section>
 
-              <div className="flex items-center justify-center">
-                <svg width="2" height="797" viewBox="0 0 2 797" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M1.00003 796L1 1"
-                    stroke="url(#paint0_linear_419_5559)"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                  />
-                  <defs>
-                    <linearGradient
-                      id="paint0_linear_419_5559"
-                      x1="1.5"
-                      y1="1"
-                      x2="1.50003"
-                      y2="796"
-                      gradientUnits="userSpaceOnUse"
-                    >
-                      <stop stopColor="#272329" stopOpacity="0" />
-                      <stop offset="0.5" stopColor="#272329" />
-                      <stop offset="1" stopColor="#272329" stopOpacity="0" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-              </div>
-
               {/* Interests Section */}
-              <section className="space-y-4 w-xs">
+              <section className="col-span-1 space-y-4">
                 <div className="flex items-center justify-center gap-1 mb-1">
                   <Icon name="icon-shooting-star" className="text-black" size="xxl" />
                 </div>
                 <h2 className="text-2xl font-bold text-gray-800">Intereses</h2>
-                <p className="text-gray-600">Selecciona 3 áreas o tecnologías que te interesan más</p>
+                <p className="text-gray-600 max-w-xs mx-auto text-center">Selecciona 3 áreas o tecnologías que te interesan más</p>
 
-                <CustomSelect
-                  options={interestOptions}
-                  value=""
-                  onChange={(value) => {
-                    if (typeof value === "string" && value) {
-                      addItem(value, interests, setInterests, setInterestSelected)
-                    }
-                  }}
-                  placeholder={`Elige un interés (${interests.length}/3)`}
-                  disabled={interests.length >= 3}
-                  fullWidth={true}
-                />
+                <Autocomplete
+                  className="w-full"
+                  label={`Elige un interés (${interests.length}/3)`}
+                  isDisabled={interests.length >= 3}
+                  value={interestSelected}
+                  onInputChange={(value) => setInterestSelected(value)}
+                >
+                  <AutocompleteSection title="Desarrollo" showDivider>
+                    {interestOptions["Desarrollo"].map((option) => (
+                      <AutocompleteItem
+                        key={option.key}
+                        onClick={() => addItem(option.label, interests, setInterests, setInterestSelected)}
+                      >
+                        {option.label}
+                      </AutocompleteItem>
+                    ))}
+                  </AutocompleteSection>
+                  <AutocompleteSection title="Inteligencia Artificial" showDivider>
+                    {interestOptions["Inteligencia Artificial"].map((option) => (
+                      <AutocompleteItem
+                        key={option.key}
+                        onClick={() => addItem(option.label, interests, setInterests, setInterestSelected)}
+                      >
+                        {option.label}
+                      </AutocompleteItem>
+                    ))}
+                  </AutocompleteSection>
+                  <AutocompleteSection title="Tecnologías Emergentes" showDivider>
+                    {interestOptions["Tecnologías Emergentes"].map((option) => (
+                      <AutocompleteItem
+                        key={option.key}
+                        onClick={() => addItem(option.label, interests, setInterests, setInterestSelected)}
+                      >
+                        {option.label}
+                      </AutocompleteItem>
+                    ))}
+                  </AutocompleteSection>
+                  <AutocompleteSection title="Especialidades">
+                    {interestOptions["Especialidades"].map((option) => (
+                      <AutocompleteItem
+                        key={option.key}
+                        onClick={() => addItem(option.label, interests, setInterests, setInterestSelected)}
+                      >
+                        {option.label}
+                      </AutocompleteItem>
+                    ))}
+                  </AutocompleteSection>
+                </Autocomplete>
 
                 {interests.length > 0 && (
                   <div className="flex flex-col gap-4 mt-6">
