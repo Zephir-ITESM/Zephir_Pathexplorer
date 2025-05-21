@@ -54,7 +54,7 @@ export function AppSidebar() {
 
   // Footer items with Spanish names
   const footerItems: { name: IconIdKeys; path: string }[] = [
-    { name: "Ajustes", path: "/shared/settings" },
+    { name: "Ajustes", path: `/${userId}/settings` },
     { name: "Cerrar sesion", path: "#" },
   ]
 

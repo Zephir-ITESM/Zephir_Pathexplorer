@@ -58,7 +58,7 @@ export async function getCurrentUser(): Promise<CurrentUser> {
 export async function login(prevState: any, formData: FormData) {
   const correo = formData.get("email") as string
   const contraseña = formData.get("password") as string
-  const rememberMe = formData.get("remember-me") === "on"
+  const rememberMe = formData.get("remember-me") === "off"
 
   // Validate input
   if (!correo || !contraseña) {
