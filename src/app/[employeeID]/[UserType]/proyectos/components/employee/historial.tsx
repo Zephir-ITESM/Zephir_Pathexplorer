@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 
-import { PageHeader } from "@/components/ui/header"
+
 
 interface ProjectHistory {
   id: string
@@ -143,13 +143,6 @@ export default function HistorialUser() {
 
   return (
     <div className="w-full">
-      <PageHeader
-        title="Historial de Proyectos"
-        breadcrumbs={[
-          { label: "Proyectos", href: "../proyectos" },
-          { label: "Historial", href: "./proyectos/historial" },
-        ]}
-      />
 
       <div className="container mx-auto px-4 py-6">
         <div className="bg-white rounded-lg shadow-sm p-6">

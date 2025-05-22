@@ -5,7 +5,6 @@ import { useAuth } from "@/auth/useAuth"
 import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { IntegrantesTab, InvitacionesTab, AplicantesTab, SugerenciasTab} from "./components/index"
-import { PageHeader } from "@/components/ui/header"
 import { DateRangePicker } from "@heroui/date-picker";
 import { Input } from "@heroui/input"
 import { NumberInput } from "@heroui/number-input"
@@ -219,32 +218,7 @@ export default function ProjectDetailsPage() {
   return (
     <div className="w-full">
       {/* Header with title, breadcrumb, actions, and tab-specific elements */}
-      <PageHeader
-        title={isNewlyCreated ? "Nuevo Proyecto" : project.name || "Detalles del Proyecto"}
-        breadcrumbs={[
-          {
-            label: "Proyectos",
-            href: `/${params.employeeId}/${params.UserType}/proyectos`,
-          },
-          {
-            label: isNewlyCreated ? "Nuevo Proyecto" : project.name || "Detalles",
-            href: "#",
-          },
-        ]}
-        actions={[
-          {
-            label: "Cancelar",
-            variant: "white",
-            onClick: handleCancel,
-          },
-          {
-            label: "Guardar",
-            variant: "purple",
-            onClick: handleSave,
-            loading: isSaving,
-          },
-        ]}
-      />
+      
 
       {/* Tab menu */}
 

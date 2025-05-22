@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { PageHeader } from "@/components/ui/header"
+
 import { ProyectosTab, AplicacionesTab } from "./components"
 
 // Tab menu items
@@ -16,19 +16,7 @@ export default function OfertaPage() {
 
   return (
     <div className="min-h-screen">
-      <PageHeader
-        title="Oferta de Proyectos"
-        breadcrumbs={[
-          { label: "Proyectos", href: "../proyectos" },
-          { label: "Oferta", href: "./oferta" },
-        ]}
-        tabs={tabs}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        onSearch={setSearchTerm}
-        searchPlaceholder="Buscar proyecto"
-      />
-
+      
       <div className="container mx-auto px-4 py-6">
         <div className="bg-white rounded-lg shadow-sm p-6">
           {activeTab === "proyectos" && <ProyectosTab searchTerm={searchTerm} />}

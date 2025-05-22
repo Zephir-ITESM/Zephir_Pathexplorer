@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 
-import { PageHeader } from "@/components/ui/header"
+
 
 interface Project {
   id: string
@@ -65,21 +65,7 @@ export default function ProyectosEmployee() {
 
   return (
     <div className="w-full">
-      <PageHeader
-        title="Mis Proyectos"
-        actions={[
-          {
-            label: "Buscar proyecto",
-            variant: "purple",
-            onClick: HandelSearchProject,
-          },
-          {
-            label: "Ver historial",
-            variant: "white",
-            onClick: handleViewHistory,
-          },
-        ]}
-      />
+    
 
       <div className="container mx-auto px-4 py-6">
         <div className="space-y-8">

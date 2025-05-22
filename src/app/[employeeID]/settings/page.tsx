@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { PageHeader } from "@/components/ui/header"
+
 import { useAuth } from "@/auth/useAuth"
 
 export default function SettingsPage() {
@@ -51,7 +51,6 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Configuración"/>
 
       <div className="bg-white p-6 rounded-lg shadow-sm">
         <h2 className="text-xl font-semibold mb-4">Administración de Usuarios</h2>
