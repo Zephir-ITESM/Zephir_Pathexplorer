@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useCallback } from "react"
-import { CustomButton } from "@/components/ui/button"
+
 import {CareerMainBackground} from "@/components/ui/backgrounds/index"
 
 interface WelcomeScreenProps {
@@ -42,14 +42,7 @@ export default function CareerPage({ onNext }: WelcomeScreenProps) {
           </p>
 
         {/* Option 2: If you need to use CustomButton, uncomment this*/}
-        <CustomButton 
-          variant="white" 
-          size="md" 
-          action={{ type: "button", onClick: handleNext }} 
-          className="font-medium"
-        >
-          Comenzar
-        </CustomButton>
+
         </div>
       </div>
     </div>

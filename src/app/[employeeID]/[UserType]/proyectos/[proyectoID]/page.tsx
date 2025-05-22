@@ -5,11 +5,7 @@ import { useAuth } from "@/auth/useAuth"
 import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { IntegrantesTab, InvitacionesTab, AplicantesTab, SugerenciasTab} from "./components/index"
-import { CustomButton } from "@/components/ui/button"
-import { CustomInput } from "@/components/ui/input"
-import { CustomTabMenu, type TabItem } from "@/components/ui/tab-menu"
 import { PageHeader } from "@/components/ui/header"
-import { CustomSearchbar } from "@/components/ui/searchbar"
 import { DateRangePicker } from "@heroui/date-picker";
 import { Input } from "@heroui/input"
 import { NumberInput } from "@heroui/number-input"
@@ -38,15 +34,6 @@ export default function ProjectDetailsPage() {
   const [isNewlyCreated, setIsNewlyCreated] = useState(false)
   const [project, setProject] = useState<Project | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
-
-  // Define tabs for the project details
-  const tabs: TabItem[] = [
-    { id: "detalles", label: "Detalles", icon: "icon-pencil" },
-    { id: "Integrantes", label: "Integrantes", icon: "icon-team" },
-    { id: "Invitaciones", label: "Invitaciones", icon: "icon-sms-star" },
-    { id: "Aplicantes", label: "Aplicantes", icon: "icon-clipboard" },
-    { id: "Sugerencias", label: "Sugerencias", icon: "icon-medal" },
-  ]
 
   const projectRoles = [
     {key: "frontend-dev", label: "Frontend Developer"},
@@ -221,89 +208,6 @@ export default function ProjectDetailsPage() {
     setSearchTerm("") // Reset search term when changing tabs
   }
 
-  // Get tab-specific header elements
-  const getTabSpecificElements = () => {
-    switch (activeTab) {
-      case "Integrantes":
-        return {
-          leftContent: (
-            <CustomButton
-              variant="purple"
-              size="sm"
-              iconName="icon-users"
-              action={{ type: "function", handler: () => {} }}
-            >
-              Integrantes
-            </CustomButton>
-          ),
-          rightContent: (
-            <div className="w-[300px]">
-              <CustomSearchbar placeholder="Buscar empleados" onSearch={(term) => setSearchTerm(term)} />
-            </div>
-          ),
-        }
-      case "Invitaciones":
-        return {
-          leftContent: (
-            <CustomButton
-              variant="purple"
-              size="sm"
-              iconName="icon-star-mail"
-              action={{ type: "function", handler: () => {} }}
-            >
-              Invitaciones
-            </CustomButton>
-          ),
-          rightContent: (
-            <div className="w-[300px]">
-              <CustomSearchbar placeholder="Buscar empleados" onSearch={(term) => setSearchTerm(term)} />
-            </div>
-          ),
-        }
-      case "Aplicantes":
-        return {
-          leftContent: (
-            <CustomButton
-              variant="purple"
-              size="sm"
-              iconName="icon-document"
-              action={{ type: "function", handler: () => {} }}
-            >
-              Aplicantes
-            </CustomButton>
-          ),
-          rightContent: (
-            <div className="w-[300px]">
-              <CustomSearchbar placeholder="Buscar empleados" onSearch={(term) => setSearchTerm(term)} />
-            </div>
-          ),
-        }
-      case "Sugerencias":
-        return {
-          leftContent: (
-            <CustomButton
-              variant="purple"
-              size="sm"
-              iconName="icon-medal"
-              action={{ type: "function", handler: () => {} }}
-            >
-              Sugerencias
-            </CustomButton>
-          ),
-          rightContent: (
-            <div className="w-[300px]">
-              <CustomSearchbar placeholder="Buscar empleados" onSearch={(term) => setSearchTerm(term)} />
-            </div>
-          ),
-        }
-      default:
-        return {
-          leftContent: null,
-          rightContent: null,
-        }
-    }
-  }
-
   if (isLoading || project === null) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -343,7 +247,6 @@ export default function ProjectDetailsPage() {
       />
 
       {/* Tab menu */}
-      <CustomTabMenu tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
 
       {/* Content based on active tab */}
       {activeTab === "detalles" && (
@@ -361,13 +264,7 @@ export default function ProjectDetailsPage() {
             </div>
 
             <div>
-              <CustomInput
-                id="integrantes"
-                name="integrantes"
-                label="Integrantes requeridos"
-                placeholder="Selecciona o escribe el puesto"
-                iconRight="icon-chevron-down"
-              />
+              
             </div>
 
             <div>

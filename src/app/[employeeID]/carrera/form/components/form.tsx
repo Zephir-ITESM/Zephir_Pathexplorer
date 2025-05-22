@@ -3,8 +3,8 @@
 import type React from "react"
 
 import { useState } from "react"
-import { CustomButton } from "@/components/ui/button"
-import { CustomTag } from "@/components/ui/tag"
+
+
 import { CareerTopBackground } from "@/components/ui/backgrounds/index"
 import { Icon } from "@/components/ui/icons"
 import { Autocomplete, AutocompleteSection, AutocompleteItem } from "@heroui/autocomplete"
@@ -100,14 +100,7 @@ export default function FormScreen({ onNext, onSkip }: FormScreenProps) {
         <div className="text-center px-4 w-full h-full">
           <div className="w-full pt-4 flex justify-end">
             {saveError && <div className="text-red-500 mr-4 self-center">{saveError}</div>}
-            <CustomButton
-              variant="white"
-              size="sm"
-              action={{ type: "function", handler: handleSave }}
-              disabled={!canProceed || isSaving}
-            >
-              {isSaving ? "Guardando..." : "Guardar"}
-            </CustomButton>
+
           </div>
           <div className="flex-1 flex flex-col items-center justify-center p-6">
             <div>
@@ -180,17 +173,7 @@ export default function FormScreen({ onNext, onSkip }: FormScreenProps) {
 
                 {priorities.length > 0 && (
                   <div className="flex flex-col gap-4 mt-6">
-                    {priorities.map((priority, index) => (
-                      <CustomTag
-                        key={index}
-                        variant="purple"
-                        removable
-                        onRemove={() => removeItem(priorities, setPriorities, priority)}
-                        className="w-full"
-                      >
-                        {priority}
-                      </CustomTag>
-                    ))}
+
                   </div>
                 )}
               </section>
@@ -246,17 +229,7 @@ export default function FormScreen({ onNext, onSkip }: FormScreenProps) {
 
                 {objectives.length > 0 && (
                   <div className="flex flex-col gap-4 mt-6">
-                    {objectives.map((objective, index) => (
-                      <CustomTag
-                        key={index}
-                        variant="purple"
-                        removable
-                        onRemove={() => removeItem(objectives, setObjectives, objective)}
-                        className="w-full"
-                      >
-                        {objective}
-                      </CustomTag>
-                    ))}
+
                   </div>
                 )}
               </section>
@@ -320,17 +293,7 @@ export default function FormScreen({ onNext, onSkip }: FormScreenProps) {
 
                 {interests.length > 0 && (
                   <div className="flex flex-col gap-4 mt-6">
-                    {interests.map((interest, index) => (
-                      <CustomTag
-                        key={index}
-                        variant="purple"
-                        removable
-                        onRemove={() => removeItem(interests, setInterests, interest)}
-                        className="w-full"
-                      >
-                        {interest}
-                      </CustomTag>
-                    ))}
+
                   </div>
                 )}
               </section>

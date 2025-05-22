@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { DataTable } from "@/components/ui/data-table"
+
 
 interface Applicant {
   id: string
@@ -159,118 +159,9 @@ export default function AplicantesTab({ searchTerm }: AplicantesTabProps) {
     }
   }
 
-  // Custom cell renderer for actions
-  const ActionsCell = ({ row }: { row: Applicant }) => {
-    return (
-      <div className="flex items-center gap-2">
-        <button
-          onClick={() => handleViewProfile(row)}
-          className="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-100"
-        >
-          Ver perfil
-        </button>
-        <button
-          onClick={() => handleAcceptApplicant(row)}
-          className="px-3 py-1 text-sm text-white bg-green-500 rounded-md hover:bg-green-600 flex items-center gap-1"
-        >
-          <span>Aceptar</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-        </button>
-        <button
-          onClick={() => handleDeleteApplicant(row)}
-          className="p-1 text-gray-500 hover:text-red-500"
-          aria-label="Eliminar"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M3 6h18"></path>
-            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-          </svg>
-        </button>
-      </div>
-    )
-  }
-
-  // Column definitions for the data table
-  const columns = [
-    {
-      accessorKey: "name",
-      header: "Nombre",
-      size: 2,
-      cell: ({ row }: { row: Applicant; getValue: () => any }) => (
-        <div className="flex items-center gap-3">
-          <div className="relative h-10 w-10 overflow-hidden rounded-full">
-            <Image src={row.avatar || "/placeholder.svg"} alt={row.name} fill className="object-cover" />
-          </div>
-          <span>{row.name}</span>
-        </div>
-      ),
-    },
-    {
-      accessorKey: "role",
-      header: "Aplica como",
-      size: 1.5,
-    },
-    {
-      accessorKey: "level",
-      header: "Nivel",
-      size: 1,
-      align: "center" as const,
-    },
-    {
-      accessorKey: "capability",
-      header: "Cargabilidad",
-      size: 1.5,
-      cell: ({ row }: { row: Applicant; getValue: () => any }) => <span>{row.capability}%</span>,
-    },
-    {
-      accessorKey: "qualification",
-      header: "Calificacion",
-      size: 1,
-      align: "center" as const,
-    },
-    {
-      accessorKey: "actions",
-      header: "",
-      size: 2,
-      cell: ({ row }: { row: Applicant; getValue: () => any }) => <ActionsCell row={row} />,
-    },
-  ]
-
   return (
     <div className="w-full">
-      <DataTable
-        data={filteredApplicants}
-        columns={columns}
-        pagination={{
-          pageIndex: 0,
-          pageSize: 10,
-          pageCount: Math.ceil(filteredApplicants.length / 10),
-          onPageChange: () => {},
-        }}
-      />
+      
     </div>
   )
 }

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { DataTable } from "@/components/ui/data-table"
+
 
 interface Project {
   id: string
@@ -185,18 +185,7 @@ export default function ProyectosTab({ searchTerm }: ProyectosTabProps) {
 
   return (
     <div className="w-full">
-      <DataTable
-        data={filteredProjects}
-        columns={columns}
-        actions={actions}
-        expandable={expandableConfig}
-        pagination={{
-          pageIndex: 0,
-          pageSize: 10,
-          pageCount: Math.ceil(filteredProjects.length / 10),
-          onPageChange: () => {},
-        }}
-      />
+      
     </div>
   )
 }

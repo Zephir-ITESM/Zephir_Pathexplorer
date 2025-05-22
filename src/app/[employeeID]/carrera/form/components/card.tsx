@@ -1,7 +1,7 @@
 "use client"
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar"
 import "react-circular-progressbar/dist/styles.css"
-import { CustomButton } from "@/components/ui/button"
+
 
 interface CareerOption {
     id: number
@@ -67,14 +67,7 @@ interface CareerOption {
         </div>
   
         {/* Choose Button - Using CustomButton */}
-        <CustomButton
-          variant="purple"
-          size="md"
-          action={{ type: "function", handler: () => onSelect(option.id) }}
-          className="w-full"
-        >
-          Elegir
-        </CustomButton>
+
       </div>
     )
   }

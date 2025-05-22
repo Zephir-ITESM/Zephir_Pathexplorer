@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { DataTable, type SortDirection } from "@/components/ui/data-table"
 
 // Sample data type
 type Education = {
@@ -170,33 +169,7 @@ export function HistorialView() {
     setPageIndex(0) // Reset to first page on search
   }
 
-  // Handle sort
-  const handleSort = (column: string, direction: SortDirection) => {
-    if (!direction) {
-      // Reset to original order
-      setSortedData([...sampleData])
-      return
-    }
 
-    const sorted = [...sortedData].sort((a, b) => {
-      const aValue = a[column as keyof Education]
-      const bValue = b[column as keyof Education]
-
-      if (aValue === bValue) return 0
-
-      // Handle different types
-      if (typeof aValue === "string" && typeof bValue === "string") {
-        return direction === "asc" ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue)
-      }
-
-      if (aValue === null || aValue === undefined) return direction === "asc" ? -1 : 1
-      if (bValue === null || bValue === undefined) return direction === "asc" ? 1 : -1
-
-      return direction === "asc" ? (aValue < bValue ? -1 : 1) : aValue < bValue ? 1 : -1
-    })
-
-    setSortedData(sorted)
-  }
 
   // Handle edit
   const handleEdit = (education: Education) => {
@@ -251,19 +224,7 @@ export function HistorialView() {
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6">
-      <DataTable
-        data={paginatedData}
-        columns={columns}
-        actions={actions}
-        isLoading={isLoading}
-        onSort={handleSort}
-        pagination={pageCount > 1 ? {
-          pageIndex,
-          pageSize,
-          pageCount,
-          onPageChange: setPageIndex,
-        } : undefined}
-      />
+
     </div>
   )
 }

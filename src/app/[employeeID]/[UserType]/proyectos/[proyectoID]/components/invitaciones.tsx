@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { DataTable } from "@/components/ui/data-table"
+
 
 interface Invitation {
   id: string
@@ -155,97 +155,10 @@ export default function InvitacionesTab({ searchTerm }: InvitacionesTabProps) {
     }
   }
 
-  // Get status badge class
-  const getStatusBadgeClass = (status: string) => {
-    switch (status) {
-      case "Aceptada":
-        return "bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium"
-      case "Rechazada":
-        return "bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium"
-      case "En espera":
-        return "bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium"
-      default:
-        return "bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-medium"
-    }
-  }
-
-  // Column definitions for the data table
-  const columns = [
-    {
-      accessorKey: "name",
-      header: "Nombre",
-      size: 2,
-      cell: ({ row }: { row: Invitation; getValue: () => any }) => (
-        <div className="flex items-center gap-3">
-          <div className="relative h-10 w-10 overflow-hidden rounded-full">
-            <Image src={row.avatar || "/placeholder.svg"} alt={row.name} fill className="object-cover" />
-          </div>
-          <span>{row.name}</span>
-        </div>
-      ),
-    },
-    {
-      accessorKey: "role",
-      header: "Invitado como",
-      size: 1.5,
-    },
-    {
-      accessorKey: "level",
-      header: "Nivel",
-      size: 1,
-      align: "center" as const,
-    },
-    {
-      accessorKey: "capability",
-      header: "Cargabilidad",
-      size: 1.5,
-      cell: ({ row }: { row: Invitation; getValue: () => any }) => <span>{row.capability}%</span>,
-    },
-    {
-      accessorKey: "qualification",
-      header: "Calificacion",
-      size: 1,
-      align: "center" as const,
-    },
-    {
-      accessorKey: "status",
-      header: "Estado",
-      size: 1.5,
-      cell: ({ row }: { row: Invitation; getValue: () => any }) => (
-        <span className={getStatusBadgeClass(row.status)}>{row.status}</span>
-      ),
-    },
-  ]
-
-  // Action buttons for each row
-  const actions = [
-    {
-      label: "Ver perfil",
-      variant: "white" as const,
-      onClick: handleViewProfile,
-    },
-    {
-      label: "Eliminar",
-      variant: "red" as const,
-      onClick: handleDeleteInvitation,
-      requireConfirmation: true,
-      confirmationMessage: "¿Estás seguro de que deseas eliminar esta invitación?",
-    },
-  ]
 
   return (
     <div className="w-full">
-      <DataTable
-        data={filteredInvitations}
-        columns={columns}
-        actions={actions}
-        pagination={{
-          pageIndex: 0,
-          pageSize: 10,
-          pageCount: Math.ceil(filteredInvitations.length / 10),
-          onPageChange: () => {},
-        }}
-      />
+      
     </div>
   )
 }

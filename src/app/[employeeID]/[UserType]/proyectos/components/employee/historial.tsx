@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { DataTable } from "@/components/ui/data-table"
+
 import { PageHeader } from "@/components/ui/header"
 
 interface ProjectHistory {
@@ -153,17 +153,7 @@ export default function HistorialUser() {
 
       <div className="container mx-auto px-4 py-6">
         <div className="bg-white rounded-lg shadow-sm p-6">
-          <DataTable
-            data={projectHistory}
-            columns={columns}
-            expandable={expandableConfig}
-            pagination={{
-              pageIndex: 0,
-              pageSize: 10,
-              pageCount: Math.ceil(projectHistory.length / 10),
-              onPageChange: () => {},
-            }}
-          />
+          
         </div>
       </div>
     </div>

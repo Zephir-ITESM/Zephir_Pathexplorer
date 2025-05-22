@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { DataTable } from "@/components/ui/data-table"
+
 
 interface TeamMember {
   id: string
@@ -151,75 +151,11 @@ export default function IntegrantesTab({ searchTerm }: IntegrantesTabProps) {
     }
   }
 
-  // Column definitions for the data table
-  const columns = [
-    {
-      accessorKey: "name",
-      header: "Nombre",
-      size: 2,
-      cell: ({ row }: { row: TeamMember; getValue: () => any }) => (
-        <div className="flex items-center gap-3">
-          <div className="relative h-10 w-10 overflow-hidden rounded-full">
-            <Image src={row.avatar || "/placeholder.svg"} alt={row.name} fill className="object-cover" />
-          </div>
-          <span>{row.name}</span>
-        </div>
-      ),
-    },
-    {
-      accessorKey: "role",
-      header: "Rol en proyecto",
-      size: 1.5,
-    },
-    {
-      accessorKey: "level",
-      header: "Nivel",
-      size: 1,
-      align: "center" as const,
-    },
-    {
-      accessorKey: "capability",
-      header: "Cargabilidad",
-      size: 1.5,
-      cell: ({ row }: { row: TeamMember; getValue: () => any }) => <span>{row.capability}%</span>,
-    },
-    {
-      accessorKey: "qualification",
-      header: "Calificacion",
-      size: 1,
-      align: "center" as const,
-    },
-  ]
-
-  // Action buttons for each row
-  const actions = [
-    {
-      label: "Ver perfil",
-      variant: "white" as const,
-      onClick: handleViewProfile,
-    },
-    {
-      label: "Eliminar",
-      variant: "red" as const,
-      onClick: handleDeleteMember,
-      requireConfirmation: true,
-      confirmationMessage: "¿Estás seguro de que deseas eliminar a este miembro del proyecto?",
-    },
-  ]
+  
 
   return (
     <div className="w-full">
-      <DataTable
-        data={filteredMembers}
-        columns={columns}
-        actions={actions}
-        pagination={{
-          pageIndex: 0,
-          pageSize: 10,
-          pageCount: Math.ceil(filteredMembers.length / 10),
-          onPageChange: () => {},
-        }}
-      />
+      
     </div>
   )
 }

@@ -4,7 +4,7 @@ import React from "react"
 import { Icon } from "@/components/ui/icons"
 import { CareerInfoBackground } from "@/components/ui/backgrounds/index"
 import CareerCard from "./card"
-import { CustomButton } from "@/components/ui/button"
+
 
 interface InformationScreenProps {
   onNext: () => void
@@ -97,14 +97,7 @@ export default function InformationScreen({ onNext, onBack, onSelectCareer }: In
               <Icon name="icon-info" size="sm" />
               <p className="text-sm">Puedes cambiar tu elección en cualquier momento</p>
             </div>
-            <CustomButton
-              variant="white"
-              size="sm"
-              action={{ type: "function", handler: handleContinue }}
-              disabled={selectedOption === null}
-            >
-              Continuar
-            </CustomButton>
+
           </div>
 
           {/* Podium Layout for Cards with increased spacing */}

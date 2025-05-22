@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { CustomButton } from "@/components/ui/button"
+
 
 // Sample data for certifications
 const certificationsData = [
@@ -64,9 +64,7 @@ export function CertificacionesView() {
         {certifications.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500 mb-4">No tienes certificaciones registradas</p>
-            <CustomButton variant="purple" action={{ type: "function", handler: () => alert("Agregar certificación") }}>
-              Agregar certificación
-            </CustomButton>
+
           </div>
         ) : (
           <div className="space-y-6">
@@ -154,21 +152,7 @@ export function CertificacionesView() {
         </div>
 
         <div className="mt-8 space-y-3">
-          <CustomButton
-            variant="purple"
-            className="w-full"
-            action={{ type: "function", handler: () => alert("Agregar certificación") }}
-          >
-            Agregar certificación
-          </CustomButton>
 
-          <CustomButton
-            variant="white"
-            className="w-full"
-            action={{ type: "function", handler: () => alert("Ver todas las certificaciones") }}
-          >
-            Ver todas
-          </CustomButton>
         </div>
       </div>
     </div>

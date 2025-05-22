@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { DataTable } from "@/components/ui/data-table"
+
 
 interface Application {
   id: string
@@ -141,18 +141,7 @@ export default function AplicacionesTab({ searchTerm }: AplicacionesTabProps) {
 
   return (
     <div className="w-full">
-      <DataTable
-        data={filteredApplications}
-        columns={columns}
-        actions={actions}
-        pagination={{
-          pageIndex: 0,
-          pageSize: 10,
-          pageCount: Math.ceil(filteredApplications.length / 10),
-          onPageChange: () => {},
-        }}
-        emptyMessage="No tienes aplicaciones a proyectos"
-      />
+      
     </div>
   )
 }

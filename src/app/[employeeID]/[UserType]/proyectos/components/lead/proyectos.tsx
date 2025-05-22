@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter, useParams } from "next/navigation"
-import { CustomButton } from "@/components/ui/button"
+
 import { PageHeader } from "@/components/ui/header"
 
 interface Project {
@@ -133,14 +133,7 @@ const ProyectosLead = () => {
                 </div>
                 <div className="mt-4 md:mt-0 text-right">
                   <p className="text-lg font-medium">{project.client}</p>
-                  <CustomButton
-                    variant="white"
-                    size="sm"
-                    className="mt-2"
-                    action={{ type: "function", handler: () => handleEditProject(project.id) }}
-                  >
-                    Editar
-                  </CustomButton>
+
                 </div>
               </div>
 

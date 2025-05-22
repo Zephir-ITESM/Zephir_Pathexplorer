@@ -5,7 +5,6 @@ import { useActionState } from 'react';
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { login } from '@/auth/actions';
-import { Loader2 } from 'lucide-react';
 import { Input } from '@heroui/input';
 import { Button } from '@heroui/button'
 import { Checkbox } from '@heroui/checkbox'
