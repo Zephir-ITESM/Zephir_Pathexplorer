@@ -1,10 +1,13 @@
 "use client"
 
+// First, let's update the imports to include the components we need
 import { useState } from "react"
 import { useRouter, useParams } from "next/navigation"
-
-
-
+import { Card, CardBody, CardFooter } from "@heroui/card"
+import { Chip } from "@heroui/chip"
+import { Button } from "@heroui/button"
+import { Icon } from "@/components/ui/icons"
+// Define the Project interface
 interface Project {
   id: string
   name: string
@@ -16,10 +19,7 @@ interface Project {
   client: string
 }
 
-interface ProyectosProps {
-  userId: string
-  role: string
-}
+// Keep the interface definitions the same
 
 const ProyectosLead = () => {
   const params = useParams()
@@ -50,84 +50,88 @@ const ProyectosLead = () => {
     },
   ])
 
-  const handleCreateProject = async () => {
-    try {
-      setIsCreating(true)
-
-      // This would be replaced with an actual API call later
-      // Simulate API call with a timeout
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      // Mock response with a generated ID
-      const mockProjectId = `proj-${Math.random().toString(36).substring(2, 9)}`
-
-      console.log("Created new project with ID:", mockProjectId)
-
-      // Navigate to the new project details page
-      router.push(`/${params.employeeID}/${params.UserType}/proyectos/${mockProjectId}`)
-    } catch (error) {
-      console.error("Error creating project:", error)
-      // Handle error (could add toast notification here)
-    } finally {
+  // Keep the existing handler functions
+  const handleCreateProject = () => {
+    setIsCreating(true)
+    setTimeout(() => {
       setIsCreating(false)
-    }
+    }, 2000)
   }
+
   const handleViewHistory = () => {
-    // Navigate to project history page
     router.push(`/${params.employeeID}/${params.UserType}/proyectos/historial`)
   }
 
-  const handleEditProject = (projectId: string) => {
-    // Navigate to edit project page
-    alert(`Edit project ${projectId}`)
+  const handleEditProject = (id: string) => {
+    router.push(`/${params.employeeID}/${params.UserType}/proyectos/${id}`)
   }
 
   return (
     <div className="w-full">
-      
+      {/* Add the header with title and buttons */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Proyectos</h1>
+        <div className="flex gap-3">
+          <Button variant="bordered" color="default" size="md" onClick={handleViewHistory}>
+            Ver historial
+          </Button>
+          <Button
+            variant="solid"
+            color="primary"
+            size="md"
+            onClick={handleCreateProject}
+            isLoading={isCreating}
+            startContent={<Icon name="icon-plus" size="sm" />}
+          >
+            Crear proyecto
+          </Button>
+        </div>
+      </div>
 
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-0 py-6">
         <div className="space-y-8">
           {projects.map((project) => (
-            <div key={project.id} className="bg-white rounded-lg shadow-sm p-6">
-              <div className="flex flex-col md:flex-row md:items-start justify-between mb-6">
+            <Card key={project.id} shadow="sm" radius="lg" className="overflow-hidden">
+              <CardBody className="p-6">
+                <div className="flex flex-col md:flex-row md:items-start justify-between mb-6">
+                  <div>
+                    <div className="flex items-center gap-3">
+                      <h2 className="text-2xl font-bold text-[#272329]">{project.name}</h2>
+                      <Chip
+                        variant="flat"
+                        color={project.status === "en_curso" ? "primary" : "default"}
+                        size="sm"
+                        radius="full"
+                      >
+                        {project.status === "en_curso"
+                          ? "Proyecto en curso"
+                          : project.status === "completado"
+                            ? "Proyecto completado"
+                            : "Proyecto futuro"}
+                      </Chip>
+                    </div>
+                    <div className="mt-2 text-[#999aa3]">
+                      <p>Inicio de proyecto: {project.startDate}</p>
+                      <p>Fin de proyecto: {project.endDate}</p>
+                      <p>Personal en proyecto: {project.collaborators} Colaboradores</p>
+                    </div>
+                  </div>
+                  <div className="mt-4 md:mt-0 text-right">
+                    <p className="text-lg font-medium">{project.client}</p>
+                  </div>
+                </div>
+
                 <div>
-                  <div className="flex items-center gap-3">
-                    <h2 className="text-2xl font-bold text-[#272329]">{project.name}</h2>
-                    <span className="text-sm px-3 py-1 rounded-full bg-[#f5f7f9] text-[#888888]">
-                      {project.status === "en_curso"
-                        ? "Proyecto en curso"
-                        : project.status === "completado"
-                          ? "Proyecto completado"
-                          : "Proyecto futuro"}
-                    </span>
-                  </div>
-                  <div className="mt-2 text-[#999aa3]">
-                    {project.status === "en_curso" || project.status === "completado" ? (
-                      <>
-                        <p>Inicio de proyecto: {project.startDate}</p>
-                        <p>Fin de proyecto: {project.endDate}</p>
-                      </>
-                    ) : (
-                      <>
-                        <p>Inicio de proyecto: {project.startDate}</p>
-                        <p>Fin de proyecto: {project.endDate}</p>
-                      </>
-                    )}
-                    <p>Personal en proyecto: {project.collaborators} Colaboradores</p>
-                  </div>
+                  <h3 className="font-medium mb-2">Descripcion</h3>
+                  <p className="text-[#888888]">{project.description}</p>
                 </div>
-                <div className="mt-4 md:mt-0 text-right">
-                  <p className="text-lg font-medium">{project.client}</p>
-
-                </div>
-              </div>
-
-              <div>
-                <h3 className="font-medium mb-2">Descripcion</h3>
-                <p className="text-[#888888]">{project.description}</p>
-              </div>
-            </div>
+              </CardBody>
+              <CardFooter className="flex justify-end p-4">
+                <Button variant="light" color="default" size="sm" onClick={() => handleEditProject(project.id)}>
+                  Editar
+                </Button>
+              </CardFooter>
+            </Card>
           ))}
         </div>
       </div>

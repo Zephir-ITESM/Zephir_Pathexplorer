@@ -12,7 +12,6 @@ export default function HistorialPage() {
   const [userType, setUserType] = useState<string | null>(null)
 
   useEffect(() => {
-
     // First try to get the user type from the URL params
     if (params.UserType) {
       const paramType = params.UserType as string

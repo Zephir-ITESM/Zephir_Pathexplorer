@@ -2,8 +2,10 @@
 
 import { useState } from "react"
 import { useParams, useRouter } from "next/navigation"
-
-
+import { Card, CardBody } from "@heroui/card"
+import { Chip } from "@heroui/chip"
+import { Button } from "@heroui/button"
+import { Icon } from "@/components/ui/icons"
 
 interface Project {
   id: string
@@ -15,9 +17,11 @@ interface Project {
   description: string
   client: string
   role?: string // Added role field for employee view
+  accepted?: boolean // Added accepted field for employee view
 }
 
 export default function ProyectosEmployee() {
+  const params = useParams()
   const router = useRouter()
   const [projects, setProjects] = useState<Project[]>([
     {
@@ -43,73 +47,91 @@ export default function ProyectosEmployee() {
       description:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent auctor purus luctus enim egestas, ac scelerisque ante pulvinar. Donec ut rhoncus ex. Suspendisse ac rhoncus nisi, eu tempor urna. Curabitur vel bibendum lorem. Morbi convallis convallis diam sit amet lacinia. Aliquam in elementum tellus.",
       client: "Accenture",
+      accepted: true,
     },
   ])
 
   const handleViewHistory = () => {
     // Navigate to project history page
-    router.push("./proyectos/historial")
+    router.push(`/${params.employeeID}/${params.UserType}/proyectos/historial`)
   }
 
   const handleViewDetails = (projectId: string) => {
     // Navigate to project details page
-    router.push(`./proyectos/${projectId}`)
+    router.push(`/${params.employeeID}/${params.UserType}/proyectos/${projectId}`)
   }
 
-  const params = useParams()
-
-  const HandelSearchProject = () => {
+  const handleSearchOpportunity = () => {
     // Navigate to project offer page
-    router.push(`/${params.employeeId}/${params.UserType}/proyectos/oferta`)
+    router.push(`/${params.employeeID}/${params.UserType}/proyectos/oferta`)
   }
 
   return (
     <div className="w-full">
-    
+      {/* Header with title and buttons */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Proyectos</h1>
+        <div className="flex gap-3">
+          <Button variant="bordered" color="default" size="md" onClick={handleViewHistory}>
+            Ver historial
+          </Button>
+          <Button
+            variant="solid"
+            color="primary"
+            size="md"
+            onClick={handleSearchOpportunity}
+            startContent={<Icon name="icon-search" size="sm" />}
+          >
+            Buscar oportunidad
+          </Button>
+        </div>
+      </div>
 
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-0 py-6">
         <div className="space-y-8">
           {projects.map((project) => (
-            <div key={project.id} className="bg-white rounded-lg shadow-sm p-6">
-              <div className="flex flex-col md:flex-row md:items-start justify-between mb-6">
-                <div>
-                  <div className="flex items-center gap-3">
-                    <h2 className="text-2xl font-bold text-[#272329]">{project.name}</h2>
-                    <span className="text-sm px-3 py-1 rounded-full bg-[#f5f7f9] text-[#888888]">
-                      {project.status === "en_curso"
-                        ? "Proyecto en curso"
-                        : project.status === "completado"
-                          ? "Proyecto completado"
-                          : "Proyecto futuro"}
-                    </span>
+            <Card key={project.id} shadow="sm" radius="lg" className="overflow-hidden">
+              <CardBody className="p-6">
+                <div className="flex flex-col md:flex-row md:items-start justify-between mb-6">
+                  <div>
+                    <div className="flex items-center gap-3">
+                      <h2 className="text-2xl font-bold text-[#272329]">{project.name}</h2>
+                      <Chip
+                        variant="flat"
+                        color={project.status === "en_curso" ? "primary" : "default"}
+                        size="sm"
+                        radius="full"
+                      >
+                        {project.status === "en_curso"
+                          ? "Proyecto en curso"
+                          : project.status === "completado"
+                            ? "Proyecto completado"
+                            : "Proyecto futuro"}
+                      </Chip>
+                    </div>
+                    <div className="mt-2 text-[#999aa3]">
+                      <p>Inicio de proyecto: {project.startDate}</p>
+                      <p>Fin de proyecto: {project.endDate}</p>
+                      <p>Personal en proyecto: {project.collaborators} Colaboradores</p>
+                      <p className="mt-1 font-medium text-[#a100ff]">Mi rol: {project.role}</p>
+                    </div>
                   </div>
-                  <div className="mt-2 text-[#999aa3]">
-                    {project.status === "en_curso" || project.status === "completado" ? (
-                      <>
-                        <p>Inicio de proyecto: {project.startDate}</p>
-                        <p>Fin de proyecto: {project.endDate}</p>
-                      </>
-                    ) : (
-                      <>
-                        <p>Inicio de proyecto: {project.startDate}</p>
-                        <p>Fin de proyecto: {project.endDate}</p>
-                      </>
+                  <div className="mt-4 md:mt-0 text-right flex flex-col items-end">
+                    <p className="text-lg font-medium">{project.client}</p>
+                    {project.accepted && (
+                      <Chip color="success" size="sm" variant="flat" className="mt-2">
+                        Aceptado
+                      </Chip>
                     )}
-                    <p>Personal en proyecto: {project.collaborators} Colaboradores</p>
-                    <p className="mt-1 font-medium text-[#a100ff]">Mi rol: {project.role}</p>
                   </div>
                 </div>
-                <div className="mt-4 md:mt-0 text-right">
-                  <p className="text-lg font-medium">{project.client}</p>
-                  
-                </div>
-              </div>
 
-              <div>
-                <h3 className="font-medium mb-2">Descripcion</h3>
-                <p className="text-[#888888]">{project.description}</p>
-              </div>
-            </div>
+                <div>
+                  <h3 className="font-medium mb-2">Descripcion</h3>
+                  <p className="text-[#888888]">{project.description}</p>
+                </div>
+              </CardBody>
+            </Card>
           ))}
         </div>
       </div>

@@ -1,15 +1,19 @@
 "use client"
 
 import { useState } from "react"
+import { Table, TableHeader, TableBody, TableColumn, TableRow, TableCell } from "@heroui/table"
+import { Button } from "@heroui/button"
+import { Pagination } from "@heroui/pagination"
+import { Icon } from "@/components/ui/icons"
 
-
-interface Application {
+interface Invitation {
   id: string
   company: string
-  projectName: string
+  leader: string
   role: string
-  applyDate: string
-  status: "Pendiente" | "Aceptada" | "Rechazada"
+  startDate: string
+  endDate: string
+  description?: string
 }
 
 interface AplicacionesTabProps {
@@ -17,131 +21,204 @@ interface AplicacionesTabProps {
 }
 
 export default function AplicacionesTab({ searchTerm }: AplicacionesTabProps) {
-  // Mock data for applications
-  const [applications, setApplications] = useState<Application[]>([
+  // Mock data for invitations
+  const [invitations, setInvitations] = useState<Invitation[]>([
     {
       id: "1",
       company: "TechCorp",
-      projectName: "Project Phoenix",
+      leader: "Eleanor Pena",
       role: "Desarrollador",
-      applyDate: "15/03/2023",
-      status: "Pendiente",
+      startDate: "01/01/2023",
+      endDate: "31/12/2023",
+      description:
+        "Mejorar y refactorizar código existente para asegurar la escalabilidad y mantenibilidad de la aplicación.",
     },
     {
       id: "2",
       company: "Innova Solutions",
-      projectName: "Operation Horizon",
+      leader: "Dianne Russell",
       role: "Diseñador",
-      applyDate: "20/04/2023",
-      status: "Aceptada",
+      startDate: "15/02/2023",
+      endDate: "15/08/2023",
+      description:
+        "Mejorar y refactorizar código existente para asegurar la escalabilidad y mantenibilidad de la aplicación.",
     },
     {
       id: "3",
       company: "GreenTech",
-      projectName: "Initiative Cascade",
+      leader: "Arlene McCoy",
       role: "Gestor de Proyectos",
-      applyDate: "05/05/2023",
-      status: "Rechazada",
+      startDate: "01/03/2023",
+      endDate: "30/11/2023",
+      description:
+        "Mejorar y refactorizar código existente para asegurar la escalabilidad y mantenibilidad de la aplicación.",
     },
     {
       id: "4",
       company: "ByteWorks",
-      projectName: "Mission Apex",
+      leader: "Courtney Henry",
       role: "Analista",
-      applyDate: "12/06/2023",
-      status: "Pendiente",
+      startDate: "10/04/2023",
+      endDate: "10/10/2023",
+      description:
+        "Mejorar y refactorizar código existente para asegurar la escalabilidad y mantenibilidad de la aplicación.",
     },
     {
       id: "5",
       company: "Creative Minds",
-      projectName: "Venture Summit",
+      leader: "Jenny Wilson",
       role: "Artista Visual",
-      applyDate: "18/07/2023",
-      status: "Aceptada",
+      startDate: "20/05/2023",
+      endDate: "20/12/2023",
+      description:
+        "Mejorar y refactorizar código existente para asegurar la escalabilidad y mantenibilidad de la aplicación.",
+    },
+    {
+      id: "6",
+      company: "DataVision",
+      leader: "Savannah Nguyen",
+      role: "Científico de Datos",
+      startDate: "05/06/2023",
+      endDate: "05/01/2024",
+      description:
+        "Mejorar y refactorizar código existente para asegurar la escalabilidad y mantenibilidad de la aplicación.",
+    },
+    {
+      id: "7",
+      company: "GreenTech",
+      leader: "Arlene McCoy",
+      role: "Gestor de Proyectos",
+      startDate: "01/03/2023",
+      endDate: "30/11/2023",
+      description:
+        "Mejorar y refactorizar código existente para asegurar la escalabilidad y mantenibilidad de la aplicación.",
+    },
+    {
+      id: "8",
+      company: "Skyline Innovations",
+      leader: "Theresa Webb",
+      role: "Product Owner",
+      startDate: "01/07/2023",
+      endDate: "01/05/2024",
+      description:
+        "Mejorar y refactorizar código existente para asegurar la escalabilidad y mantenibilidad de la aplicación.",
     },
   ])
 
-  // Filter applications based on search term
-  const filteredApplications = applications.filter(
-    (application) =>
-      application.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      application.projectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      application.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      application.status.toLowerCase().includes(searchTerm.toLowerCase()),
+  // State for expanded rows
+  const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({})
+
+  // Current page state for pagination
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
+  const totalPages = Math.ceil(invitations.length / itemsPerPage)
+
+  // Toggle row expansion
+  const toggleRowExpansion = (rowId: string) => {
+    setExpandedRows((prev) => ({
+      ...prev,
+      [rowId]: !prev[rowId],
+    }))
+  }
+
+  // Filter invitations based on search term
+  const filteredInvitations = invitations.filter(
+    (invitation) =>
+      invitation.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      invitation.leader.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      invitation.role.toLowerCase().includes(searchTerm.toLowerCase()),
   )
 
-  // Handle cancel application
-  const handleCancelApplication = (application: Application) => {
-    if (application.status === "Pendiente") {
-      if (confirm(`¿Estás seguro de que deseas cancelar tu aplicación para ${application.projectName}?`)) {
-        setApplications((prev) => prev.filter((a) => a.id !== application.id))
-      }
-    } else {
-      alert("No puedes cancelar una aplicación que ya ha sido procesada.")
-    }
+  // Paginate the filtered invitations
+  const paginatedInvitations = filteredInvitations.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+
+  // Handle accept invitation
+  const handleAccept = (invitation: Invitation) => {
+    console.log("Accepted invitation:", invitation.company, invitation.role)
+    // In a real implementation, this would send an API request to accept the invitation
+    setInvitations((prev) => prev.filter((inv) => inv.id !== invitation.id))
   }
 
-  // Get status badge class
-  const getStatusBadgeClass = (status: string) => {
-    switch (status) {
-      case "Aceptada":
-        return "bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium"
-      case "Rechazada":
-        return "bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-medium"
-      case "Pendiente":
-        return "bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium"
-      default:
-        return "bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-medium"
-    }
+  // Handle reject invitation
+  const handleReject = (invitation: Invitation) => {
+    console.log("Rejected invitation:", invitation.company, invitation.role)
+    // In a real implementation, this would send an API request to reject the invitation
+    setInvitations((prev) => prev.filter((inv) => inv.id !== invitation.id))
   }
-
-  // Column definitions for the data table
-  const columns = [
-    {
-      accessorKey: "company",
-      header: "Empresa",
-      size: 1.5,
-    },
-    {
-      accessorKey: "projectName",
-      header: "Proyecto",
-      size: 2,
-    },
-    {
-      accessorKey: "role",
-      header: "Rol",
-      size: 1.5,
-    },
-    {
-      accessorKey: "applyDate",
-      header: "Fecha de aplicación",
-      size: 1.5,
-    },
-    {
-      accessorKey: "status",
-      header: "Estado",
-      size: 1.5,
-      cell: ({ row }: { row: Application; getValue: () => any }) => (
-        <span className={getStatusBadgeClass(row.status)}>{row.status}</span>
-      ),
-    },
-  ]
-
-  // Action buttons for each row
-  const actions = [
-    {
-      label: "Cancelar",
-      variant: "red" as const,
-      onClick: handleCancelApplication,
-      isHidden: (row: Application) => row.status !== "Pendiente",
-      requireConfirmation: true,
-      confirmationMessage: "¿Estás seguro de que deseas cancelar esta aplicación?",
-    },
-  ]
 
   return (
     <div className="w-full">
-      
+      {/* Invitations table */}
+      <div className="overflow-x-auto">
+        <Table aria-label="Invitaciones a proyectos" className="min-w-full">
+          <TableHeader>
+            <TableColumn className="font-medium text-left p-4">Empresa</TableColumn>
+            <TableColumn className="font-medium text-left p-4">Líder</TableColumn>
+            <TableColumn className="font-medium text-left p-4">Rol en proyecto</TableColumn>
+            <TableColumn className="font-medium text-left p-4">Inicio</TableColumn>
+            <TableColumn className="font-medium text-left p-4">Fin</TableColumn>
+            <TableColumn className="font-medium text-right p-4">Acciones</TableColumn>
+          </TableHeader>
+          <TableBody>
+            {paginatedInvitations.map((invitation) => (
+              <>
+                <TableRow key={invitation.id} className="border-b border-gray-100">
+                  <TableCell className="p-4">{invitation.company}</TableCell>
+                  <TableCell className="p-4">{invitation.leader}</TableCell>
+                  <TableCell className="p-4">{invitation.role}</TableCell>
+                  <TableCell className="p-4">{invitation.startDate}</TableCell>
+                  <TableCell className="p-4">{invitation.endDate}</TableCell>
+                  <TableCell className="p-4 text-right">
+                    <div className="flex justify-end items-center gap-2">
+                      <Button
+                        color="success"
+                        size="sm"
+                        onClick={() => handleAccept(invitation)}
+                        startContent={<Icon name="icon-check" size="sm" />}
+                      >
+                        Aceptar
+                      </Button>
+                      <Button
+                        color="danger"
+                        size="sm"
+                        onClick={() => handleReject(invitation)}
+                        startContent={<Icon name="icon-x" size="sm" />}
+                      >
+                        Rechazar
+                      </Button>
+                      <button
+                        onClick={() => toggleRowExpansion(invitation.id)}
+                        className="p-1 rounded-full hover:bg-gray-100"
+                      >
+                        {expandedRows[invitation.id] ? (
+                          <Icon name="icon-chevron-up" size="sm" />
+                        ) : (
+                          <Icon name="icon-chevron-down" size="sm" />
+                        )}
+                      </button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+                {expandedRows[invitation.id] && (
+                  <TableRow key={`${invitation.id}-expanded`} className="bg-gray-50">
+                    <TableCell colSpan={6} className="p-4">
+                      <div>
+                        <h3 className="font-medium mb-2">Descripción</h3>
+                        <p className="text-[#888888]">{invitation.description}</p>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Pagination */}
+      <div className="flex justify-center mt-6">
+        
+      </div>
     </div>
   )
 }
