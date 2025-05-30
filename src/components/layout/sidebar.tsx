@@ -11,7 +11,38 @@ type IconIdKeys = "Inicio" | "Carrera" | "Habilidades" | "Proyectos" | "Analisis
 export function AppSidebar() {
   const pathname = usePathname()
   const [isExpanded, setIsExpanded] = useState(false)
-  const { isLead, isEmployee, userId, role, logout } = useAuth()
+  const { isLead, isEmployee, userId, role, logout, isAuthReady, isAuthenticated } = useAuth()
+
+  // Don't render navigation until auth is ready
+  if (!isAuthReady) {
+    return (
+      <aside
+        className={`z-50 fixed left-0 top-0 h-screen w-16 flex flex-col bg-[#ffffff] border-r border-gray-200 transition-all duration-300 ease-in-out`}
+      >
+        {/* Logo at the top - fixed height container */}
+        <div className="flex justify-center items-center h-20">
+          <div className="relative w-8 h-8">
+            <Image
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Accenture%20logo-AGEKhFu1kFFPMEmAqzDPslxaE0Dnpp.png"
+              alt="Accenture Icon"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
+        </div>
+        {/* Loading state */}
+        <div className="flex-1 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
+        </div>
+      </aside>
+    )
+  }
+
+  // If not authenticated, don't show navigation
+  if (!isAuthenticated || !userId) {
+    return null
+  }
 
   // Navigation items with Spanish names - adjusted based on user role
   const navItems: { name: IconIdKeys; path: string }[] = [
@@ -21,7 +52,7 @@ export function AppSidebar() {
     },
     {
       name: "Carrera",
-      path: `/${userId}/carrera/form`,
+      path: `/${userId}/carrera/dashboard`,
     },
     {
       name: "Habilidades",
@@ -90,11 +121,11 @@ export function AppSidebar() {
         {navItems.map((item) => {
           // Check if the current path matches this nav item
           const isActive =
-          item.name === "Inicio"
-            ? pathname.endsWith("/dashboard") && pathname === `/${userId}/dashboard`
-            : item.name === "Carrera"
-              ? pathname.includes("/carrera/")
-              : pathname.includes(`/${item.path.split("/").pop()}`)
+            item.name === "Inicio"
+              ? pathname.endsWith("/dashboard") && pathname === `/${userId}/dashboard`
+              : item.name === "Carrera"
+                ? pathname.includes("/carrera/")
+                : pathname.includes(`/${item.path.split("/").pop()}`)
           // Get the icon name from our mapping
           const iconName = getIconName(item.name)
 

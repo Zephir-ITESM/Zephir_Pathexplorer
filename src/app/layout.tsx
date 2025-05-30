@@ -1,18 +1,18 @@
-import "@/styles/globals.css";
-
-import clsx from "clsx";
-
-import { Metadata, Viewport } from "next";
-import { Providers } from "./providers";
-import { fontSans } from "@/config/fonts";
-import SessionManager from "@/components/session-manager";
+import type React from "react"
+import "@/styles/globals.css"
+import clsx from "clsx"
+import type { Metadata, Viewport } from "next"
+import { Providers } from "./providers"
+import { fontSans } from "@/config/fonts"
+import { AuthProvider } from "@/hooks/use-auth"
 
 export const metadata: Metadata = {
   title: "Zephir Pathexplorer",
   description: "Human Resources Management System for Accenture",
   icons: {
     icon: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Accenture%20logo-AGEKhFu1kFFPMEmAqzDPslxaE0Dnpp.png",
-    apple: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Accenture%20logo-AGEKhFu1kFFPMEmAqzDPslxaE0Dnpp.png",
+    apple:
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Accenture%20logo-AGEKhFu1kFFPMEmAqzDPslxaE0Dnpp.png",
   },
 }
 
@@ -21,27 +21,21 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: light)", color: "white" },
     { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
-};
+}
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <html suppressHydrationWarning lang="en">
       <head />
-      <body
-        className={clsx(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable,
-        )}
-      >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "light", forcedTheme: "light" }}>
-          {children}
-          <SessionManager />
+      <body className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
+        <Providers>
+          <AuthProvider>{children}</AuthProvider>
         </Providers>
       </body>
     </html>
-  );
+  )
 }

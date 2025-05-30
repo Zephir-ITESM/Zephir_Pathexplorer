@@ -1,50 +1,46 @@
-'use client';
+"use client"
 
-import React from 'react';
-import { useActionState } from 'react';
-import { useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { login } from '@/auth/actions';
-import { Input } from '@heroui/input';
-import { Button } from '@heroui/button'
-import { Checkbox } from '@heroui/checkbox'
-import { Icon } from '@/components/ui/icons';
+import React from "react"
+import { useActionState } from "react"
+import { useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { supabaseLogin } from "@/auth/actions"
+import { Input } from "@heroui/input"
+import { Button } from "@heroui/button"
+import { Checkbox } from "@heroui/checkbox"
+import { Icon } from "@/components/ui/icons"
 
 export default function LoginClient() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const invalidToken = searchParams.get('invalidToken') === 'true';
-  const [isVisible, setIsVisible] = React.useState(false);
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const invalidToken = searchParams.get("invalidToken") === "true"
+  const [isVisible, setIsVisible] = React.useState(false)
 
-  const toggleVisibility = () => setIsVisible(!isVisible);
+  const toggleVisibility = () => setIsVisible(!isVisible)
 
-  const [state, formAction, isPending] = useActionState(login, {
+  const [state, formAction, isPending] = useActionState(supabaseLogin, {
     success: false,
-    message: '',
-    redirectTo: '',
-    sessionId: '',
-  });
+    message: "",
+    redirectTo: "",
+    sessionId: "",
+  })
 
   useEffect(() => {
     if (state.success && state.redirectTo) {
-      router.push(state.redirectTo);
+      router.push(state.redirectTo)
     }
-  }, [state, router]);
+  }, [state, router])
 
   useEffect(() => {
     if (invalidToken) {
-      fetch('/api/auth/clear-cookies');
+      fetch("/api/auth/clear-cookies")
     }
-  }, [invalidToken]);
+  }, [invalidToken])
 
   return (
     <form className="space-y-6" action={formAction}>
       {state.message && (
-        <div
-          className={`p-3 rounded-md ${
-            state.success ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
-          }`}
-        >
+        <div className={`p-3 rounded-md ${state.success ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"}`}>
           {state.message}
         </div>
       )}
@@ -55,18 +51,9 @@ export default function LoginClient() {
         </div>
       )}
 
-
-      <div className='flex flex-col gap-y-4'>
+      <div className="flex flex-col gap-y-4">
         <div className="space-y-2">
-          <Input
-          id='email'
-          fullWidth={true}
-          name='email'
-          isRequired
-          className="max-w"
-          label="Correo"
-          type="email"
-          /> 
+          <Input id="email" fullWidth={true} name="email" isRequired className="max-w" label="Correo" type="email" />
         </div>
 
         <div className="space-y-2">
@@ -82,23 +69,17 @@ export default function LoginClient() {
                   onClick={toggleVisibility}
                 >
                   {isVisible ? (
-                    <Icon
-                      name="icon-crossed-eye"
-                      className="text-2xl text-default-400 pointer-events-none"
-                    />
+                    <Icon name="icon-crossed-eye" className="text-2xl text-default-400 pointer-events-none" />
                   ) : (
-                    <Icon
-                      name="icon-eye"
-                      className="text-2xl text-default-400 pointer-events-none"
-                      />
+                    <Icon name="icon-eye" className="text-2xl text-default-400 pointer-events-none" />
                   )}
                 </button>
               </div>
             }
             label="Contraseña"
             type={isVisible ? "text" : "password"}
-            id='password'
-            name='password'
+            id="password"
+            name="password"
             isRequired
           />
         </div>
@@ -106,10 +87,7 @@ export default function LoginClient() {
 
       <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <Checkbox
-            color="primary">
-              Mantener Sesion
-          </Checkbox>
+          <Checkbox color="primary">Mantener Sesion</Checkbox>
         </div>
 
         <div className="text-sm">
@@ -118,13 +96,9 @@ export default function LoginClient() {
           </link>*/}
         </div>
       </div>
-      <Button 
-        color="default" 
-        type="submit"
-        fullWidth={true}
-        >
-        Iniciar sesión
+      <Button color="default" type="submit" fullWidth={true} disabled={isPending}>
+        {isPending ? "Iniciando sesión..." : "Iniciar sesión"}
       </Button>
     </form>
-  );
+  )
 }

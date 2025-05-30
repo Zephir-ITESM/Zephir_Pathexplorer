@@ -1,22 +1,26 @@
 "use client"
 
 // First, let's update the imports to include the components we need
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { Card, CardBody, CardFooter } from "@heroui/card"
 import { Chip } from "@heroui/chip"
 import { Button } from "@heroui/button"
 import { Icon } from "@/components/ui/icons"
+import { fetchWithAuth } from "@/services/api"
+
 // Define the Project interface
 interface Project {
-  id: string
-  name: string
-  status: "en_curso" | "completado" | "futuro"
-  startDate: string
-  endDate: string
-  collaborators: number
-  description: string
-  client: string
+  id_proyecto: number
+  nombre: string
+  descripcion: string
+  fecha_inicio: string
+  fecha_fin: string
+  id_delivery_lead: string
+  cupo_limite: number
+  horas: number
+  created_at?: string
+  updated_at?: string
 }
 
 // Keep the interface definitions the same
@@ -25,30 +29,26 @@ const ProyectosLead = () => {
   const params = useParams()
   const router = useRouter()
   const [isCreating, setIsCreating] = useState(false)
-  const [projects, setProjects] = useState<Project[]>([
-    {
-      id: "1",
-      name: "Path Explorer",
-      status: "en_curso",
-      startDate: "15 Marzo, 2025",
-      endDate: "15 Junio, 2025",
-      collaborators: 15,
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent auctor purus luctus enim egestas, ac scelerisque ante pulvinar. Donec ut rhoncus ex. Suspendisse ac rhoncus nisi, eu tempor urna. Curabitur vel bibendum lorem. Morbi convallis convallis diam sit amet lacinia. Aliquam in elementum tellus.",
-      client: "Accenture",
-    },
-    {
-      id: "2",
-      name: "Path Explorer V2",
-      status: "futuro",
-      startDate: "15 Mayo, 2025",
-      endDate: "15 Agosto, 2025",
-      collaborators: 15,
-      description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eu turpis molestie, dictum est a, mattis tellus. Sed dignissim, metus nec fringilla accumsan, risus sem sollicitudin lacus, ut interdum tellus elit sed risus. Maecenas eget condimentum velit, sit amet feugiat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent auctor purus luctus enim egestas, ac scelerisque ante pulvinar. Donec ut rhoncus ex. Suspendisse ac rhoncus nisi, eu tempor urna. Curabitur vel bibendum lorem. Morbi convallis convallis diam sit amet lacinia. Aliquam in elementum tellus.",
-      client: "Accenture",
-    },
-  ])
+  const [projects, setProjects] = useState<Project[]>([])
+
+  useEffect(() => {
+    const getProjects = async () => {
+      try {
+        const response = await fetchWithAuth(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/proyectos/user/proyectos/deliverylead?idDeliveryLead=${params.employeeID}`,
+        )
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        const data = await response.json()
+        setProjects(data)
+      } catch (error) {
+        console.error("Could not fetch projects", error)
+      }
+    }
+
+    getProjects()
+  }, [params.employeeID])
 
   // Keep the existing handler functions
   const handleCreateProject = () => {
@@ -91,43 +91,39 @@ const ProyectosLead = () => {
       <div className="container mx-auto px-0 py-6">
         <div className="space-y-8">
           {projects.map((project) => (
-            <Card key={project.id} shadow="sm" radius="lg" className="overflow-hidden">
+            <Card key={project.id_proyecto} shadow="sm" radius="lg" className="overflow-hidden">
               <CardBody className="p-6">
                 <div className="flex flex-col md:flex-row md:items-start justify-between mb-6">
                   <div>
                     <div className="flex items-center gap-3">
-                      <h2 className="text-2xl font-bold text-[#272329]">{project.name}</h2>
-                      <Chip
-                        variant="flat"
-                        color={project.status === "en_curso" ? "primary" : "default"}
-                        size="sm"
-                        radius="full"
-                      >
-                        {project.status === "en_curso"
-                          ? "Proyecto en curso"
-                          : project.status === "completado"
-                            ? "Proyecto completado"
-                            : "Proyecto futuro"}
+                      <h2 className="text-2xl font-bold text-[#272329]">{project.nombre}</h2>
+                      <Chip variant="flat" color={"primary"} size="sm" radius="full">
+                        {"Proyecto en curso"}
                       </Chip>
                     </div>
                     <div className="mt-2 text-[#999aa3]">
-                      <p>Inicio de proyecto: {project.startDate}</p>
-                      <p>Fin de proyecto: {project.endDate}</p>
-                      <p>Personal en proyecto: {project.collaborators} Colaboradores</p>
+                      <p>Inicio de proyecto: {project.fecha_inicio}</p>
+                      <p>Fin de proyecto: {project.fecha_fin}</p>
+                      <p>Personal en proyecto: {project.cupo_limite} Colaboradores</p>
                     </div>
                   </div>
                   <div className="mt-4 md:mt-0 text-right">
-                    <p className="text-lg font-medium">{project.client}</p>
+                    <p className="text-lg font-medium">{"Accenture"}</p>
                   </div>
                 </div>
 
                 <div>
                   <h3 className="font-medium mb-2">Descripcion</h3>
-                  <p className="text-[#888888]">{project.description}</p>
+                  <p className="text-[#888888]">{project.descripcion}</p>
                 </div>
               </CardBody>
               <CardFooter className="flex justify-end p-4">
-                <Button variant="light" color="default" size="sm" onClick={() => handleEditProject(project.id)}>
+                <Button
+                  variant="light"
+                  color="default"
+                  size="sm"
+                  onClick={() => handleEditProject(project.id_proyecto.toString())}
+                >
                   Editar
                 </Button>
               </CardFooter>

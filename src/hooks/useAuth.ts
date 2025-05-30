@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { usePathname, useRouter } from "next/navigation" // useRouter for redirecting after logout
+import { usePathname, useRouter } from "next/navigation"
 import { getCurrentUser, logout as serverLogout, type CurrentUser } from "@/auth/actions"
 
 // Define the shape of the auth state and context
@@ -18,8 +18,7 @@ interface UseAuthReturn extends AuthState {
   isAdmin: boolean
   isLead: boolean
   isEmployee: boolean
-  // You can add more specific role checks if needed
-  isAuthReady: boolean
+  // Expose userId directly for easy access
   userId: string | null
   role: string | null
   token: string | null
@@ -34,12 +33,14 @@ const initialAuthState: AuthState = {
 export function useAuth(): UseAuthReturn {
   const [authState, setAuthState] = useState<AuthState>(initialAuthState)
   const pathname = usePathname()
-  const router = useRouter() // For redirecting after logout
+  const router = useRouter()
 
   const fetchUserData = useCallback(async () => {
+    console.log("useAuth - fetchUserData called")
     setAuthState((prev) => ({ ...prev, isLoading: true, error: null }))
     try {
-      const user = await getCurrentUser() // Call the server action
+      const user = await getCurrentUser()
+      console.log("useAuth - getCurrentUser returned:", user)
       setAuthState({ user, isLoading: false, error: null })
     } catch (error) {
       console.error("useAuth: Error fetching user data:", error)
@@ -52,22 +53,20 @@ export function useAuth(): UseAuthReturn {
   }, [])
 
   useEffect(() => {
+    console.log("useAuth - useEffect triggered, pathname:", pathname)
     fetchUserData()
-  }, [fetchUserData, pathname]) // Re-fetch on pathname change if session might change with route
+  }, [fetchUserData]) // Remove pathname dependency to avoid refetching on every route change
 
   const handleLogout = async () => {
     setAuthState((prev) => ({ ...prev, isLoading: true }))
     try {
-      await serverLogout() // Call the server action for logout
+      await serverLogout()
       setAuthState({ user: null, isLoading: false, error: null })
-      // The server action already handles redirect, but you could also do it here if needed
-      // router.push('/login');
     } catch (error) {
       console.error("useAuth: Logout error:", error)
-      // Even if logout action fails, clear local state
       setAuthState((prev) => ({
         ...prev,
-        user: null, // Ensure user is cleared locally
+        user: null,
         isLoading: false,
         error: error instanceof Error ? error.message : "Logout failed",
       }))
@@ -83,12 +82,14 @@ export function useAuth(): UseAuthReturn {
   const isAdmin = authState.user?.role === "admin"
   const isLead = authState.user?.role === "lead"
   const isEmployee = authState.user?.role === "employee"
-  const isAuthReady = !authState.isLoading
 
-  // Expose userId, role, token directly
-  const userId = authState.user?.userId || null
-  const role = authState.user?.role || null
-  const token = authState.user?.token || null
+  // Debug: Log the current auth state
+  console.log("useAuth - Current state:", {
+    isAuthenticated,
+    userId: authState.user?.userId,
+    role: authState.user?.role,
+    isLoading: authState.isLoading,
+  })
 
   return {
     ...authState,
@@ -98,9 +99,9 @@ export function useAuth(): UseAuthReturn {
     isAdmin,
     isLead,
     isEmployee,
-    isAuthReady,
-    userId,
-    role,
-    token,
+    // Expose individual properties for easy access
+    userId: authState.user?.userId || null,
+    role: authState.user?.role || null,
+    token: authState.user?.token || null,
   }
 }
