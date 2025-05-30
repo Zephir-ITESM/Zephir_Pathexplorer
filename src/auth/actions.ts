@@ -216,7 +216,7 @@ export async function logout() {
     cookieStore.delete("user_id")
     cookieStore.delete("user_type")
     cookieStore.delete("session_id")
-    redirect("/login")
+    redirect("/")
   }
 }
 

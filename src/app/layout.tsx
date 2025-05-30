@@ -19,7 +19,6 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
 }
 
@@ -29,9 +28,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html suppressHydrationWarning lang="en">
+    <html suppressHydrationWarning lang="en" className="light" style={{colorScheme: 'light'}}>
       <head />
-      <body className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
+      <body className={clsx("min-h-screen bg-background font-sans antialiased light", fontSans.variable)}>
         <Providers>
           <AuthProvider>{children}</AuthProvider>
         </Providers>

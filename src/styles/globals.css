@@ -2,6 +2,103 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Force light theme globally */
+:root {
+  color-scheme: light;
+  --background: white;
+  --foreground: #1e293b;
+}
+
+/* Ensure html and body are always light */
+html {
+  color-scheme: light !important;
+  background-color: white !important;
+}
+
+html.light,
+html[data-theme="light"] {
+  color-scheme: light !important;
+  background-color: white !important;
+}
+
+/* Prevent any dark theme from being applied */
+html.dark,
+html[data-theme="dark"] {
+  color-scheme: light !important;
+  background-color: white !important;
+}
+
+body {
+  background-color: white !important;
+  color: #1e293b !important;
+}
+
+/* Override any dark mode styles */
+* {
+  color-scheme: light !important;
+}
+
+/* Recharts specific overrides */
+.recharts-wrapper {
+  background-color: transparent !important;
+  color-scheme: light !important;
+}
+
+.recharts-surface {
+  background-color: transparent !important;
+}
+
+.recharts-default-tooltip {
+  background-color: white !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #1e293b !important;
+  color-scheme: light !important;
+}
+
+.recharts-tooltip-label,
+.recharts-tooltip-item-name,
+.recharts-tooltip-item-value {
+  color: #1e293b !important;
+}
+
+.recharts-text {
+  fill: #64748b !important;
+}
+
+.recharts-cartesian-axis-line,
+.recharts-cartesian-axis-tick-line {
+  stroke: #e2e8f0 !important;
+}
+
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: #e2e8f0 !important;
+}
+
+.recharts-legend-item-text {
+  color: #1e293b !important;
+}
+
+/* Force all text to be dark */
+.recharts-layer text {
+  fill: #64748b !important;
+}
+
+/* Override any potential dark theme from HeroUI */
+[data-theme="dark"] {
+  color-scheme: light !important;
+  background-color: white !important;
+}
+
+.dark {
+  color-scheme: light !important;
+  background-color: white !important;
+}
+
+/* Ensure all components use light theme */
+.nextui-theme {
+  color-scheme: light !important;
+}
 
 :root {
     --accenture-purple: #a100ff;

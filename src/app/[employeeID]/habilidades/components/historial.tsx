@@ -1,230 +1,137 @@
-"use client"
-
-import { useState, useEffect } from "react"
-
-// Sample data type
-type Education = {
-  id: number
-  nombre: string
-  fechaExpedicion: string
+interface EducationRecord {
+  institucion: string
+  titulo: string
+  fechaInicio: string
+  fechaFin: string
   fechaExpiracion: string
-  empresa: string
+  descripcion: string
 }
 
-// Sample data
-const sampleData: Education[] = [
-  {
-    id: 1,
-    nombre: "TN Programador",
-    fechaExpedicion: "09/10/19",
-    fechaExpiracion: "09/10/21",
-    empresa: "ITESM",
-  },
-  {
-    id: 2,
-    nombre: "Azure Cloud Architect",
-    fechaExpedicion: "10/10/19",
-    fechaExpiracion: "10/10/21",
-    empresa: "Microsoft",
-  },
-  {
-    id: 3,
-    nombre: "Certified ScrumMaster",
-    fechaExpedicion: "05/05/20",
-    fechaExpiracion: "05/05/22",
-    empresa: "Scrum Alliance",
-  },
-  {
-    id: 4,
-    nombre: "AWS Solutions Architect",
-    fechaExpedicion: "07/07/20",
-    fechaExpiracion: "07/07/22",
-    empresa: "Amazon",
-  },
-  {
-    id: 5,
-    nombre: "Google Cloud Engineer",
-    fechaExpedicion: "08/08/20",
-    fechaExpiracion: "08/08/22",
-    empresa: "Google",
-  },
-  {
-    id: 6,
-    nombre: "Cisco Certified Network Associate",
-    fechaExpedicion: "09/09/20",
-    fechaExpiracion: "09/09/22",
-    empresa: "Cisco",
-  },
-  {
-    id: 7,
-    nombre: "CompTIA Security+",
-    fechaExpedicion: "10/10/20",
-    fechaExpiracion: "10/10/22",
-    empresa: "CompTIA",
-  },
-  {
-    id: 8,
-    nombre: "Oracle Certified Professional",
-    fechaExpedicion: "11/11/20",
-    fechaExpiracion: "11/11/22",
-    empresa: "Oracle",
-  },
-  {
-    id: 9,
-    nombre: "Project Management Professional",
-    fechaExpedicion: "12/12/20",
-    fechaExpiracion: "12/12/22",
-    empresa: "PMI",
-  },
-  {
-    id: 10,
-    nombre: "ITIL Foundation",
-    fechaExpedicion: "01/01/21",
-    fechaExpiracion: "01/01/23",
-    empresa: "Axelos",
-  },
-  {
-    id: 11,
-    nombre: "Certified Ethical Hacker",
-    fechaExpedicion: "02/02/21",
-    fechaExpiracion: "02/02/23",
-    empresa: "EC-Council",
-  },
-  {
-    id: 12,
-    nombre: "Microsoft Certified: Azure Fundamentals",
-    fechaExpedicion: "03/03/21",
-    fechaExpiracion: "03/03/23",
-    empresa: "Microsoft",
-  },
-  {
-    id: 13,
-    nombre: "AWS Certified Cloud Practitioner",
-    fechaExpedicion: "04/04/21",
-    fechaExpiracion: "04/04/23",
-    empresa: "Amazon",
-  },
-  {
-    id: 14,
-    nombre: "Google Cloud Digital Leader",
-    fechaExpedicion: "05/05/21",
-    fechaExpiracion: "05/05/23",
-    empresa: "Google",
-  },
-  {
-    id: 15,
-    nombre: "Certified Kubernetes Administrator",
-    fechaExpedicion: "06/06/21",
-    fechaExpiracion: "06/06/23",
-    empresa: "CNCF",
-  },
-  {
-    id: 16,
-    nombre: "VMware Certified Professional",
-    fechaExpedicion: "07/07/21",
-    fechaExpiracion: "07/07/23",
-    empresa: "VMware",
-  },
-]
-
-export function HistorialView() {
-  // State for pagination
-  const [pageIndex, setPageIndex] = useState(0)
-  const [pageSize, setPageSize] = useState(10) // Changed from 5 to 10 to show all items on one page
-
-  // State for loading simulation
-  const [isLoading, setIsLoading] = useState(true)
-
-  // State for search
-  const [searchTerm, setSearchTerm] = useState("")
-
-  // State for sorting
-  const [sortedData, setSortedData] = useState<Education[]>([...sampleData])
-
-  // Filtered data based on search term
-  const filteredData = sortedData.filter(
-    (education) =>
-      education.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      education.empresa.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
-
-  // Paginated data
-  const paginatedData = filteredData.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize)
-
-  // Calculate page count
-  const pageCount = Math.ceil(filteredData.length / pageSize)
-
-  // Simulate loading
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 1000)
-
-    return () => clearTimeout(timer)
-  }, [])
-
-  // Handle search
-  const handleSearch = (term: string) => {
-    setSearchTerm(term)
-    setPageIndex(0) // Reset to first page on search
-  }
-
-
-
-  // Handle edit
-  const handleEdit = (education: Education) => {
-    alert(`Editando ${education.nombre}`)
-  }
-
-  // Handle delete
-  const handleDelete = (education: Education) => {
-    alert(`Eliminando ${education.nombre}`)
-  }
-
-  // Column definitions
-  const columns = [
+const HistorialEducativo = () => {
+  const sampleData: EducationRecord[] = [
     {
-      accessorKey: "nombre",
-      header: "Nombre",
-      size: 2,
+      institucion: "Universidad Tecnológica Nacional",
+      titulo: "Ingeniería en Sistemas",
+      fechaInicio: "01/03/2015",
+      fechaFin: "15/12/2020",
+      fechaExpiracion: "N/A",
+      descripcion: "Carrera de grado en Ingeniería en Sistemas de Información.",
     },
     {
-      accessorKey: "fechaExpedicion",
-      header: "Fecha de expedición",
-      size: 1.5,
+      institucion: "Coursera",
+      titulo: "Certificado Profesional de Google Data Analytics",
+      fechaInicio: "20/01/2021",
+      fechaFin: "20/07/2021",
+      fechaExpiracion: "20/07/2024",
+      descripcion: "Certificado profesional que valida habilidades en análisis de datos.",
     },
     {
-      accessorKey: "fechaExpiracion",
-      header: "Fecha de expiración",
-      size: 1.5,
-    },
-    {
-      accessorKey: "empresa",
-      header: "Empresa",
-      size: 1.5,
-    },
-  ]
-
-  // Action buttons
-  const actions = [
-    {
-      label: "Editar",
-      variant: "white" as const,
-      onClick: handleEdit,
-    },
-    {
-      label: "Eliminar",
-      variant: "red" as const,
-      icon: "icon-trash",
-      onClick: handleDelete,
-      requireConfirmation: true,
-      confirmationMessage: "¿Estás seguro de que deseas eliminar esta educación?",
+      institucion: "Platzi",
+      titulo: "Curso de React.js",
+      fechaInicio: "01/05/2022",
+      fechaFin: "15/06/2022",
+      fechaExpiracion: "N/A",
+      descripcion: "Curso intensivo sobre el framework React.js.",
     },
   ]
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6">
+    <div className="space-y-6">
+      {/* Header with stats */}
+      <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold">Historial Educativo</h2>
+          <button className="px-4 py-2 bg-accenture-purple text-white rounded-lg hover:bg-accenture-purple/90 transition-colors">
+            Agregar Educación
+          </button>
+        </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <h3 className="font-medium mb-2">Total de Estudios</h3>
+            <div className="text-3xl font-bold text-accenture-purple">{sampleData.length}</div>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <h3 className="font-medium mb-2">Certificaciones Activas</h3>
+            <div className="text-3xl font-bold text-green-500">
+              {
+                sampleData.filter((item) => new Date(item.fechaExpiracion.split("/").reverse().join("-")) > new Date())
+                  .length
+              }
+            </div>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <h3 className="font-medium mb-2">Próximas a Expirar</h3>
+            <div className="text-3xl font-bold text-yellow-500">1</div>
+            <p className="text-sm text-gray-500 mt-1">En 90 días</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Existing table content */}
+      <div className="bg-white rounded-lg shadow-sm p-6">
+        <h3 className="text-lg font-medium mb-4">Registros Educativos</h3>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
+              <tr>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Institución
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Título
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Fecha Inicio
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Fecha Fin
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Fecha Expiración
+                </th>
+                <th
+                  scope="col"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Descripción
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {sampleData.map((record, index) => (
+                <tr key={index}>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {record.institucion}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.titulo}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.fechaInicio}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.fechaFin}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{record.fechaExpiracion}</td>
+                  <td className="px-6 py-4 text-sm text-gray-500">{record.descripcion}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   )
 }
+
+export default HistorialEducativo

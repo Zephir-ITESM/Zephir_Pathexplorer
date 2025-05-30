@@ -49,13 +49,13 @@ export async function middleware(req: NextRequest) {
 
   // Redirect to login if accessing protected route without session
   if (isProtectedPath && !session) {
-    const redirectUrl = new URL("/login", req.url)
+    const redirectUrl = new URL("/", req.url)
     redirectUrl.searchParams.set("redirect", req.nextUrl.pathname)
     return NextResponse.redirect(redirectUrl)
   }
 
   // Redirect to dashboard if accessing login/register with active session
-  if ((req.nextUrl.pathname === "/login" || req.nextUrl.pathname === "/register") && session) {
+  if ((req.nextUrl.pathname === "/" || req.nextUrl.pathname === "/register") && session) {
     return NextResponse.redirect(new URL("/dashboard", req.url))
   }
 
